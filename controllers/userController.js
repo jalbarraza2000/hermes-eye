@@ -300,13 +300,14 @@ exports.getProfile = (req, res)=>{
 exports.getOrderDetails = (req, res) => {
     db.query("SELECT longitude, latitude FROM locations WHERE orderID = ? ORDER BY loggedOn DESC", req.params.orderID, (err, result) => {
         if(err) throw err;
-        db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.shippedVia, o.businessStyle, o.approvedBy, o.receivedBy, o.status, o.plateNum, c.branch, c.contactPersonFName, c.contactPersonLName, o.shippedOn FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE orderID = ?", req.params.orderID, (err, orderDetails) => {
+        db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.completedOn, o.shippedVia, o.businessStyle, o.approvedBy, o.receivedBy, o.status, o.plateNum, c.branch, c.contactPersonFName, c.contactPersonLName, o.shippedOn FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE orderID = ?", req.params.orderID, (err, orderDetails) => {
           if(err) throw err;
           db.query("SELECT * FROM deliveryItems WHERE orderID = ?", req.params.orderID, (err, rows) => {
             if(err) throw err;
             res.render('order_details', {result: JSON.stringify(result), rows:rows, orderID: orderDetails[0].orderID, plateNum: orderDetails[0].plateNum, 
               branch: orderDetails[0].branch, contactPerson: orderDetails[0].contactPersonFName + " " + orderDetails[0].contactPersonLName, status: orderDetails[0].status, 
-              shippedVia: orderDetails[0].shippedVia, businessStyle: orderDetails[0].businessStyle, approvedBy: orderDetails[0].approvedBy, receivedBy: orderDetails[0].receivedBy, shippedOn: orderDetails[0].shippedOn});
+              shippedVia: orderDetails[0].shippedVia, businessStyle: orderDetails[0].businessStyle, approvedBy: orderDetails[0].approvedBy, receivedBy: orderDetails[0].receivedBy, 
+              shippedOn: orderDetails[0].shippedOn, completedOn: orderDetails[0].completedOn});
          });
         });
     });

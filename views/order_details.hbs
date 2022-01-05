@@ -158,7 +158,7 @@
 
           <div class="orderInformationBox">
             <h6 class="infoTitle">Delivery Completed</h6>
-            <h6 class="infoContent">{{shippedOn}}</h6>
+            <h6 class="infoContent">{{completedOn}}</h6>
           </div>
         </div>
       </div>
@@ -179,6 +179,9 @@
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="unloaded-tab" data-bs-toggle="tab" data-bs-target="#unloaded" type="button" role="tab" aria-controls="unloaded" aria-selected="false">Unloaded Items</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="verified-tab" data-bs-toggle="tab" data-bs-target="#verified" type="button" role="tab" aria-controls="verified" aria-selected="false">Verified Items</button>
           </li>
         </ul>
 
@@ -223,6 +226,34 @@
                         </tr>
                         {{#each rows}}
                           {{#ifEquals this.status "Unloaded"}}
+                          <tr>
+                              <td class="table-body">{{this.uniqueCode}}</td>
+                              <td class="table-body">{{this.productID}}</td>
+                              <td class="table-body">{{this.status}}</td>
+                              <td class="table-body">{{this.dateTime}}</td>
+                          </tr>
+                          {{/ifEquals}}
+                        {{else}}
+                        <tr>
+                          <td class="table-body">No Information to Display Yet</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="verified" role="tabpanel" aria-labelledby="verified-tab">
+            <div class="order-details-table">
+                <table style="font-family: Nunito; text-align: center; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <th class="table-header">Unique ID</th>
+                            <th class="table-header">Product ID</th>
+                            <th class="table-header">Status</th>
+                            <th class="table-header">Date and Time</th>
+                        </tr>
+                        {{#each rows}}
+                          {{#ifEquals this.status "Verified"}}
                           <tr>
                               <td class="table-body">{{this.uniqueCode}}</td>
                               <td class="table-body">{{this.productID}}</td>
