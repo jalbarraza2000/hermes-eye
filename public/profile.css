@@ -6,3 +6,36 @@ main {
   color: #1b3c65;
   text-transform: uppercase;
 }
+
+.header-banner {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.header-banner h1 {
+  font-size: 45px;
+  text-transform: uppercase;
+  color: #00c2cb;
+}
+
+#signout {
+  display: block;
+  width: fit-content;
+  font-size: 25px;
+  text-decoration: none;
+  font-family: "Montserrat";
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #c3e0e5;
+  color: black;
+  margin: 10px auto;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-property: all;
+}
+
+#signout:hover {
+  background-color: #7acdf1;
+  color: black;
+  margin: 10px auto;
+}

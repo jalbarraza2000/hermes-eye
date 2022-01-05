@@ -375,3 +375,8 @@ exports.postResolveOrder = (req, res) => {
         });
     });
 }
+
+exports.getSignout = (req,res)=>{
+    req.session.destroy()
+    res.redirect("/")
+}
