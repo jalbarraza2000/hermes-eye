@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="notifications.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <title>Orders | Hermes Eye</title>
+</head>
+<body>
+    <header id="head">
+        <nav>
+          <div class="logo">
+            <img src="img/HermesEye icon.png"></img>
+          </div>
+          <ul class="navlist">
+            <li><a href="home" method="get">Home</a></li>
+            <li><a href="orders" method="get">Orders</a></li>
+            <li class="li-notifications">
+                <a href="http://127.0.0.1:5501/public/test.html" method="get">Notifications
+                    <button type="button" class="icon-button">
+                        <span class="material-icons">notifications</span>
+                        <span class="icon-button-badge">2</span>
+                    </button>
+                </a>
+                
+            </li>
+            
+            <li><a href="profile" method="get">Profile</a></li>
+          </ul>
+        </nav>
+      </header>
+      
+      <main>
+        <div id="title_header"><h1>Notifications</h1></div>
+
+        <!-- <div class="no-notification">
+            No new notifications
+        </div> -->
+        
+        <!-- <div class="notification-container">
+            <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                <div  class="notification-head">
+              
+              
+                    <div class="order-number">Order Number : {{orderNumber}}</div>   
+                    
+                    <span class="material-icons">local_shipping</span>
+                    <span class="material-icons">assignment_turned_in</span>
+                    <span class="material-icons">check_circle</span>
+                    
+                    <div class="order-status">Status: {{orderStatus}}</div>
+                  </div>
+            </a>
+        </div> -->
+                
+            
+            
+
+      </main>
+      
+      <!-- partial -->
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script>
+      <script  src="notifications.js"></script>
+      <!-- <script  src="./index.js"></script> -->
+
+    <!-- <script>
+        $(document).ready(function(){
+            $(".li-notifications").click(function(){
+                $("span.icon-button-badge").hide();
+            })
+        })
+      </script> -->
+      
+</body>
+</html>

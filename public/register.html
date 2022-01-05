@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+    <link rel="stylesheet" type="text/css" href="registration.css">
+
+    <title>Orders | Hermes Eye</title>
+</head>
+<body>
+    <header id="head">
+        <nav>
+          <div class="logo">
+            <img src="img/HermesEye icon.png"></img>
+          </div>
+          <ul class="navlist">
+            <li><a href="home" method="get">Home</a></li>
+            <li><a href="orders" method="get">Orders</a></li>
+            <li><a href="notifications" method="get">Notifications</a></li>
+            <li><a href="registration" method="get">Register</a></li>
+            <li><a href="profile" method="get">Profile</a></li>
+          </ul>
+        </nav>
+    </header>
+      
+    <main>
+      <div id="title_header"><h1>Registration</h1></div>
+  
+      <img src="img/HermesEye BannerSky.png" id="logo">
+      
+      <div class="box">
+
+          <div class="button-box">
+              <h1>Create an account</h1>
+          </div>
+
+          <!-- REGISTER -->
+          <form id="register" class="input-group" method="post" action="register">
+            <input class="input-field" type="text" name="firstname" placeholder="First name" required> <br>
+            <input class="input-field" type="text" name="lastname" placeholder="Last name" required> <br>
+            <input class="input-field" type="text" name="un" placeholder="Username" required> <br>
+            <input class="input-field" type="password" name="pw" placeholder="Password" required minlength="8"> <br>
+            
+            <div class = "dropdownUser">
+              <label for="inputUserRole">Choose role  :</label>
+              <select id="inputUserRole" name="role">
+                <option value="twUser" selected>T&W User</option>
+                <option value="clientUser">Client User</option>
+              </select>
+            </div>
+            
+            <input class="form-btn" type="submit" value="Create">
+          </form>
+
+      </div>
+
+      </main>
+      
+      <!-- partial -->
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+      <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script><script  src="./home.js"></script> -->
+</body>
+</html>

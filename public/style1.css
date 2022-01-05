@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+/* Google Font: Nunito 
+   Usage: font-family: 'Nunito', sans-serif;
+   Weights Imported: 200, 400, 800
+*/
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;800&display=swap');
+
+.navbar-nav > a{
+    margin-left:30px;
+  }
+  
+  .navbar-logo {
+    height: 70px; 
+    margin-left: 60px;
+  }
+  
+  @media only screen and (max-width: 990px) {
+    .navbar-logo {
+      margin-left: 30px;
+    }
+  }  
+  
+  .icon-button-badge {
+    position: relative;
+    top: -15px;
+    right: -45px;
+    width: 20px;
+    height: 20px;
+    background: red;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }

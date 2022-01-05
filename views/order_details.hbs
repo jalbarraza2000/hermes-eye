@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- <meta http-equiv="Refresh" content="10">  -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/order_details.css">
+    <link rel="stylesheet" href="/style1.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/css/ol.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/build/ol.js"></script>
+
+    <title>Order Details | Hermes Eye</title>
+  </head>
+  <body>
+    
+    <script>
+        window.onload = init;
+        
+        function init(){
+
+          var longLat = {{{result}}};
+          var length = longLat.length;
+          if(length > 0) {
+            var map = new ol.Map({
+                target: 'map',
+                layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+                ],
+                view: new ol.View({
+                center: ol.proj.fromLonLat([longLat[0].latitude, longLat[0].longitude]),
+                zoom: 18
+                })
+            });
+        
+            var currentIcon = new ol.layer.Vector({
+                source: new ol.source.Vector(),
+                style: new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    src: '/img/location.png',
+                    scale: 0.070
+                })
+                })
+            });
+
+            var previousIcon = new ol.layer.Vector({
+                source: new ol.source.Vector(),
+                style: new ol.style.Style({
+                image: new ol.style.Icon({
+                    anchor: [0.5, 1],
+                    src: '/img/location1.png',
+                    scale: 0.070
+                })
+                })
+            });
+            map.addLayer(currentIcon);
+            map.addLayer(previousIcon);
+            var marker = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[0].latitude, longLat[0].longitude])));
+            currentIcon.getSource().addFeature(marker);
+
+            for(let i = 1; i < length; i++) {
+              var marker1 = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[i].latitude, longLat[i].longitude])));
+              previousIcon.getSource().addFeature(marker1);
+            }
+          }
+          else {
+            $( ".truck-map" ).remove();
+            $( ".refresh-button" ).remove();
+          }
+        }
+    </script>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
+        <a class="navbar-brand" href="/"><img class="navbar-logo" src="/img/HermesEye icon.png"></img></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/home" method="get">Home</a>
+            <a class="nav-item nav-link active" href="/orders" method="get">Orders</a>
+            <a class="nav-item nav-link" href="/notifications" method="get" style="display: flex;"><span>Notifications</span>
+                {{#if_greater notifs 0}}
+                    <span class="icon-button-badge">{{notifs}}</span>
+                {{/if_greater}}
+                            
+                <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
+                    <span class="material-icons">notifications</span>
+                </button>
+            </a>
+            <a class="nav-item nav-link" href="/registration">Registration</a>
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-sm">
+      <h2 style="font-family: Nunito; font-weight: 800; margin-top: 50px; margin-bottom: 10px;">Order {{orderID}}</h2>
+      {{#if (isNull plateNum)}}
+      <h3 style="font-family: Poppins; font-weight: 800; margin-top: 50px; margin-bottom: 10px;">Displaying Location for {{plateNum}}</h3>  
+      {{else}}
+      <h3 style="font-family: Poppins; font-weight: 800; margin-top: 50px; margin-bottom: 10px;">No Truck Assigned Yet</h3>  
+      {{/if}}
+
+      {{#if result.length}}
+      <div id="map" class="map truck-map"></div> 
+      {{/if}}
+      <button class="btn btn-primary refresh-button" onClick="window.location.reload();">Get Current Location</button>
+
+      <div class="orderInformation">
+        <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Order Information</h5>
+        <div class="orderDetailsBox">
+          
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Branch</h6>
+            <h6 class="infoContent">{{branch}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Contact Person</h6>
+            <h6 class="infoContent">{{contactPerson}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle" id="orderStatus" value="{{status}}">Status</h6>
+            <h6 class="infoContent">{{status}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Shipped Via</h6>
+            <h6 class="infoContent">{{shippedVia}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Business Style</h6>
+            <h6 class="infoContent">{{businessStyle}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Approved By</h6>
+            <h6 class="infoContent">{{approvedBy}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Received By</h6>
+            <h6 class="infoContent">{{receivedBy}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Delivery On</h6>
+            <h6 class="infoContent">{{shippedOn}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Delivery Completed</h6>
+            <h6 class="infoContent">{{shippedOn}}</h6>
+          </div>
+        </div>
+      </div>
+
+        <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Order Controls</h5>
+        <div class="button-group">
+          <td class="table-body"><button type="button" id="approve-button" class="btn btn-primary approve_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#approveModal">Approve</button></td>
+          <td class="table-body"><button type="button" id="pending-button" class="btn btn-warning pend_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#pendingModal">Pending</button></td>
+          <td class="table-body"><button type="button" id="resolve-button" class="btn btn-warning resolve_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#resolveModal">Resolve</button></td>
+          <td class="table-body"><button type="button" id="complete-button" class="btn btn-success complete_order" value={{orderID}} style="font-family: Nunito; font-weight: 800;" data-toggle="modal" data-target="#completeModal">Verified</button></td>
+        </div>
+
+      <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Product Information</h5>
+      <div class="deliveryItems-list">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="loaded-tab" data-bs-toggle="tab" data-bs-target="#loaded" type="button" role="tab" aria-controls="loaded" aria-selected="true">Loaded Items</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="unloaded-tab" data-bs-toggle="tab" data-bs-target="#unloaded" type="button" role="tab" aria-controls="unloaded" aria-selected="false">Unloaded Items</button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="loaded" role="tabpanel" aria-labelledby="loaded-tab">
+            <div class="order-details-table">
+              <table style="font-family: Nunito; text-align: center; width:100%;">
+                  <tbody>
+                      <tr>
+                          <th class="table-header">Unique ID</th>
+                          <th class="table-header">Product ID</th>
+                          <th class="table-header">Status</th>
+                          <th class="table-header">Date and Time</th>
+                      </tr>
+                      {{#each rows}}
+                        {{#ifEquals this.status "Loaded"}}
+                        <tr>
+                            <td class="table-body">{{this.uniqueCode}}</td>
+                            <td class="table-body">{{this.productID}}</td>
+                            <td class="table-body">{{this.status}}</td>
+                            <td class="table-body">{{this.dateTime}}</td>
+                        </tr>
+                        {{/ifEquals}}
+                      {{else}}
+                        <tr>
+                          <td class="table-body">No Information to Display Yet</td>
+                        </tr>
+                      {{/each}}
+                  </tbody>
+              </table>
+          </div>
+          </div>
+          <div class="tab-pane fade" id="unloaded" role="tabpanel" aria-labelledby="unloaded-tab">
+            <div class="order-details-table">
+                <table style="font-family: Nunito; text-align: center; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <th class="table-header">Unique ID</th>
+                            <th class="table-header">Product ID</th>
+                            <th class="table-header">Status</th>
+                            <th class="table-header">Date and Time</th>
+                        </tr>
+                        {{#each rows}}
+                          {{#ifEquals this.status "Unloaded"}}
+                          <tr>
+                              <td class="table-body">{{this.uniqueCode}}</td>
+                              <td class="table-body">{{this.productID}}</td>
+                              <td class="table-body">{{this.status}}</td>
+                              <td class="table-body">{{this.dateTime}}</td>
+                          </tr>
+                          {{/ifEquals}}
+                        {{else}}
+                        <tr>
+                          <td class="table-body">No Information to Display Yet</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!---Approval Modal --->
+      <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Approve Order</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="/approve-order" id="approve-form" method="POST">
+
+                <label>Order ID</label>
+                <input type="text" id="orderID_input1" name="orderID" readonly>
+                <br><br>
+
+                <label>Approved By</label>
+                <input type="text" name="approvedBy" required>
+                <br><br>
+
+                <label>Truck Plate Number to Deliver</label>
+                <input type="text" name="plateNum" required>
+                <br><br>
+
+                <input type="hidden" name="dateApproved" id="dateApproved">
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" form="approve-form" class="btn btn-primary">Save changes</button>
+            </div>
+           </div>
+          </div>
+        </div>
+
+      <!---Complete Modal --->
+      <div class="modal fade" id="completeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Complete Order</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action="/complete-order" id="complete-form" method="POST">
+
+                <label>Order ID</label>
+                <input type="text" id="orderID_input2" name="orderID" readonly>
+                <br><br>
+
+                <label>Received By</label>
+                <input type="text" name="receivedBy" required>
+                <br><br>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" form="complete-form" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!---Pending Modal --->
+      <div class="modal fade" id="pendingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Submit Pend Request</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action="/pending-order" id="pending-form" method="POST">
+
+                <label>Order ID</label>
+                <input type="text" id="orderID_input3" name="orderID" readonly>
+                <br><br>
+
+                <label>Justification</label>
+                <textarea id="justification" name="justification" rows="4" cols="40"></textarea>
+                <br><br>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" form="pending-form" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!---Resolution Modal --->
+    <div class="modal fade" id="resolveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Submit Resolution</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form action="/resolve-order" id="resolve-form" method="POST">
+
+                <label>Order ID</label>
+                <input type="text" id="orderID_input4" name="orderID" readonly>
+                <br><br>
+
+                <label>Resolution</label>
+                <textarea id="resolution" name="resolution" rows="4" cols="40"></textarea>
+                <br><br>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" form="resolve-form" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        function generateDate(){
+            var currentTime = new Date();                
+            var date = currentTime.getFullYear()+'-'+(currentTime.getMonth()+1)+'-'+currentTime.getDate();
+            var time = currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds();
+            var dateTime = date+' '+time;
+            $('#dateApproved').val(dateTime)
+        }
+
+        $('.approve_order').on('click', function(e) {   
+            $('#orderID_input1').val($(this).attr("value"));
+            generateDate();
+        });
+
+        $('.complete_order').on('click', function(e) {    
+            $('#orderID_input2').val($(this).attr("value"));
+        });
+
+        $('.pend_order').on('click', function(e) {    
+            $('#orderID_input3').val($(this).attr("value"));
+        });
+
+        $('.resolve_order').on('click', function(e) {    
+            $('#orderID_input4').val($(this).attr("value"));
+        });
+
+        $( document ).ready(function() {
+            if($('#orderStatus').attr("value") == "Verified") {
+              console.log("Here")
+              $( "#approve-button" ).addClass( "disabled" );
+              $( "#complete-button" ).addClass( "disabled" );
+              $( "#resolve-button" ).addClass( "disabled" );
+            }
+            else if($('#orderStatus').attr("value") == "In Transit") {
+              $( "#approve-button" ).addClass( "disabled" );
+              $( "#resolve-button" ).addClass( "disabled" );
+            }
+            else if($('#orderStatus').attr("value") == "Pending") {
+              $( "#approve-button" ).addClass( "disabled" );
+              $( "#complete-button" ).addClass( "disabled" );
+              $( "#pending-button" ).addClass( "disabled" );
+            }
+            else if($('#orderStatus').attr("value") == "Resolved") {
+              $( "#resolve-button" ).addClass( "disabled" );
+            }
+            else if($('#orderStatus').attr("value") == "Delivered") {
+              $( "#approve-button" ).addClass( "disabled" );
+              $( "#resolve-button" ).addClass( "disabled" );
+            }
+            else {
+              $( "#resolve-button" ).addClass( "disabled" );
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

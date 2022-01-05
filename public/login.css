@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+body {
+  /* background:#00c2cb; */
+  background: #1b3c65;
+  font-family: "Montserrat";
+  display: grid;
+  grid-template-rows: 200px 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+}
+
+/* FOR LOGO */
+#logo {
+  grid-column: 1/4;
+  grid-row: 1/2;
+  height: 300px;
+  width: auto;
+  position: relative;
+  /* top: 10px; */
+  align-content: center;
+  margin: 0 auto;
+}
+
+/* FOR LOGIN/REGISTER */
+.box {
+  grid-row: 2/3;
+  width: 380px;
+  height: 480px;
+  position: relative;
+  /* top: 15%; */
+  margin: 0 auto;
+  border-radius: 25px;
+  background: white;
+  padding: 5px;
+  overflow: hidden;
+
+  font-family: "Montserrat";
+  grid-column: 2/3;
+}
+
+.button-box {
+  width: auto;
+  margin: 35px auto;
+  position: relative;
+  box-shadow: 0 0 10px 4px #7acdf1;
+  border-radius: 30px;
+}
+
+.button-box h1 {
+  padding: 10px 30px;
+  /* cursor: pointer; */
+  background: transparent;
+  border: 0;
+  outline: none;
+  position: relative;
+  font-family: "Montserrat";
+  font-size: 15px;
+  border-radius: 10px;
+  width: auto;
+  height: 100%;
+  background: #7acdf1;
+  text-align: center;
+}
+
+.input-group {
+  top: 100px;
+  position: absolute;
+  width: 280px;
+  transition: 0.5s;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 0;
+  margin: 5px 0;
+  border: 0;
+  border-bottom: 1px solid #999;
+  outline: none;
+  background: transparent;
+  font-family: "Montserrat";
+}
+
+.form-btn {
+  font-family: "Montserrat";
+  font-size: 15px;
+  width: 85%;
+  padding: 10px 30px;
+  cursor: pointer;
+  display: block;
+  margin: 10px auto;
+  background: #c3e0e5;
+  border: 5px;
+  outline: none;
+  border-radius: 30px;
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-property: all;
+}
+
+.form-btn:hover {
+  background: #7acdf1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.check-box {
+  margin: 30px 10px 30px 0;
+  zoom: 1.5;
+}
+
+span {
+  color: #515;
+  font-size: 15px;
+  bottom: 105px;
+  position: absolute;
+}
+
+#login {
+  left: 50px;
+}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="home.css">
+
+    <title>Home | Hermes Eye</title>
+</head>
+<body>
+    <header id="head">
+        <nav>
+          <div class="logo">
+            <img src="img/HermesEye icon.png"></img>
+          </div>
+          <ul class="navlist">
+            <li><a href="home" method="get">Home</a></li>
+            <li><a href="orders" method="get">Orders</a></li>
+
+            <li class="li-notifications">
+                <a href="notifications" method="get">Notifications
+                    <button type="button" class="icon-button">
+                        <span class="material-icons">notifications</span>
+
+                        {{#if_greater notifs 0}}
+                          <span class="icon-button-badge">{{notifs}}</span>
+                        {{/if_greater}}
+
+                    </button>
+                </a>
+            </li>
+            <li><a href="profile" method="get">Profile</a></li>
+          </ul>
+        </nav>
+      </header>
+      
+      <main>
+        <div class="home-banner">
+            <h1 class="banner">WELCOME CLIENT<br>{{firstname}} {{lastname}}</h1>
+        </div>
+
+
+      </main>
+      
+      <!-- partial -->
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+      <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script><script  src="./home.js"></script> -->
+
+</body>
+</html>

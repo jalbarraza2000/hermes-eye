@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="notifications.css">
+
+    <title>Notifications | Hermes Eye</title>
+</head>
+<body>
+    <header id="head">
+        <nav>
+          <div class="logo">
+            <img src="img/HermesEye icon.png"></img>
+          </div>
+          <ul class="navlist">
+            <li><a href="home" method="get">Home</a></li>
+            <li><a href="orders" method="get">Orders</a></li>
+
+            <li class="li-notifications">
+                <a href="notifications" method="get">Notifications
+                    <button type="button" class="icon-button">
+                        <span class="material-icons">notifications</span>
+
+                        {{#if_greater notifs 0}}
+                          <span class="icon-button-badge">{{notifs}}</span>
+                        {{/if_greater}}
+
+                    </button>
+                </a>
+            </li>
+            
+            <li><a href="registration" method="get">Register</a></li>
+            <li><a href="profile" method="get">Profile</a></li>
+          </ul>
+        </nav>
+      </header>
+      
+      <main>
+        <div id="title_header"><h1>Notifications</h1></div>
+
+        {{#unless notifications}}
+          <div class="no-notification">
+              No new notifications
+          </div>
+        {{/unless}}
+
+        {{#each notifications}}
+
+          {{!-- DELIVERED NOTIFICATION --}}
+          {{#ifEquals status "Delivered"}}
+            {{#ifEquals readStatus 3}}
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">assignment_turned_in</span>
+                        <div class="order-status">Status: For Approval</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">local_shipping</span>
+                        <div class="order-status">Status: In Transit</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+
+            {{#ifEquals readStatus 2}}
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">assignment_turned_in</span>
+                        <div class="order-status">Status: For Approval</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+
+            {{#ifEquals readStatus 1}}
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+            
+          {{/ifEquals}}
+
+          {{!-- FOR APPROVAL NOTIFICATION --}}
+          {{#ifEquals status "For Approval"}}
+            {{#ifEquals readStatus 2}}
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons" style="color: #444444">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">assignment_turned_in</span>
+                        <div class="order-status">Status: In Transit</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+
+            {{#ifEquals readStatus 1}}
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons" style="color: #444444">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+            
+          {{/ifEquals}}
+
+          {{!-- IN TRANSIT NOTIFICATION --}}
+          {{#ifEquals status "In Transit"}}
+            {{#ifEquals readStatus 1}}
+              <div class="notification-container">
+                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons" style="color: #444444">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+            
+          {{/ifEquals}}
+
+        {{/each}}
+
+      </main>
+      
+      <!-- partial -->
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'>
+      </script><script  src="./notifications.js"></script>
+</body>
+</html>

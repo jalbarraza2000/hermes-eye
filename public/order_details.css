@@ -1,0 +1,85 @@
+.order-details-table {
+    border: 2px solid grey;
+    border-radius: 5px;
+    overflow-x:auto;
+}
+
+.deliveryItems-list {
+    margin: auto;
+    margin-bottom: 15px;
+}
+
+.map {
+    height: 500px;
+    width: 100%;
+}
+
+@media only screen and (max-width: 900px) {
+    .map {
+        width: 95%;
+    }
+}  
+
+.truck-map {
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.orderInformation {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderDetailsBox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-align: center;
+
+}
+
+.orderInformationBox {
+    margin-right: 50px;
+    margin-bottom: 30px;
+}
+
+.infoTitle {
+    font-family: Nunito;
+    font-weight: 800;
+}
+
+.infoContent {
+    font-family: Poppins;
+    font-weight: 400;
+}
+
+.table-div{
+    border: 2px solid grey;
+    border-radius: 5px;
+    overflow-x:auto;
+  }
+  
+  .table-header{
+    border-bottom: 2px solid grey;
+    padding: 10px;
+  }
+  
+  .table-body{
+    padding: 10px;
+  }
+
+@media only screen and (max-width: 600px) {
+    .map {
+        width: 95%;
+    }
+
+    .orderDetailsBox {
+        margin-left: 30px;
+    
+    }
+}  
+
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+}
