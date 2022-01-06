@@ -298,7 +298,7 @@ exports.getProfile = (req, res)=>{
 }
 
 exports.getOrderDetails = (req, res) => {
-    db.query("SELECT longitude, latitude FROM locations WHERE orderID = ? ORDER BY loggedOn DESC", req.params.orderID, (err, result) => {
+    db.query("SELECT longitude, latitude, loggedOn FROM locations WHERE orderID = ? ORDER BY loggedOn DESC", req.params.orderID, (err, result) => {
         if(err) throw err;
         db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.completedOn, o.shippedVia, o.businessStyle, o.approvedBy, o.receivedBy, o.status, o.plateNum, c.branch, c.contactPersonFName, c.contactPersonLName, o.shippedOn FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE orderID = ?", req.params.orderID, (err, orderDetails) => {
           if(err) throw err;

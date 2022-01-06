@@ -19,6 +19,11 @@
     
     <script>
         window.onload = init;
+
+        Date.prototype.addHours= function(h){
+            this.setHours(this.getHours()+h);
+            return this;
+        }
         
         function init(){
 
@@ -68,6 +73,10 @@
               var marker1 = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[i].latitude, longLat[i].longitude])));
               previousIcon.getSource().addFeature(marker1);
             }
+            
+            var dt1 = new Date(longLat[0].loggedOn.replace('T', ' ').replace('Z', ''))
+            dt1.addHours(8)
+            $( ".lastLoggedTime" ).text("- Last Location Time at " + dt1.toString());
           }
           else {
             $( ".truck-map" ).remove();
@@ -107,10 +116,12 @@
       <h3 style="font-family: Poppins; font-weight: 800; margin-top: 50px; margin-bottom: 10px;">No Truck Assigned Yet</h3>  
       {{/if}}
 
-      {{#if result.length}}
       <div id="map" class="map truck-map"></div> 
-      {{/if}}
-      <button class="btn btn-primary refresh-button" onClick="window.location.reload();">Get Current Location</button>
+
+      <div class="location-information" style="display: flex;">
+        <button class="btn btn-primary refresh-button" style="margin-right: 10px;" onClick="window.location.reload();">Get Current Location</button>
+        <h5 class="lastLoggedTime" style="margin-top: 5px;"></h5>
+      </div>
 
       <div class="orderInformation">
         <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Order Information</h5>
@@ -429,7 +440,6 @@
 
         $( document ).ready(function() {
             if($('#orderStatus').attr("value") == "Verified") {
-              console.log("Here")
               $( "#approve-button" ).addClass( "disabled" );
               $( "#complete-button" ).addClass( "disabled" );
               $( "#resolve-button" ).addClass( "disabled" );
