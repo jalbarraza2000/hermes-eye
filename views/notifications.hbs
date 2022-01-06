@@ -6,6 +6,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="notifications.css">
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
 
     <title>Notifications | Hermes Eye</title>
 </head>
@@ -52,8 +54,8 @@
           {{!-- DELIVERED NOTIFICATION --}}
           {{#ifEquals status "Delivered"}}
             {{#ifEquals readStatus 3}}
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
                     <div  class="notification-head">                     
                         <div class="order-number">Order Number : {{orderID}}</div>   
                           <span class="material-icons">check_circle</span>
@@ -62,8 +64,18 @@
                 </a>
               </div>
 
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">local_shipping</span>
+                        <div class="order-status">Status: In Transit</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
                     <div  class="notification-head">                     
                         <div class="order-number">Order Number : {{orderID}}</div>   
                           <span class="material-icons">assignment_turned_in</span>
@@ -71,9 +83,21 @@
                       </div>
                 </a>
               </div>
+            {{/ifEquals}}
 
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+            {{#ifEquals readStatus 2}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">check_circle</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
                     <div  class="notification-head">                     
                         <div class="order-number">Order Number : {{orderID}}</div>   
                           <span class="material-icons">local_shipping</span>
@@ -83,72 +107,12 @@
               </div>
             {{/ifEquals}}
 
-            {{#ifEquals readStatus 2}}
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+            {{#ifEquals readStatus 1}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
                     <div  class="notification-head">                     
                         <div class="order-number">Order Number : {{orderID}}</div>   
                           <span class="material-icons">check_circle</span>
-                        <div class="order-status">Status: {{status}}</div>
-                      </div>
-                </a>
-              </div>
-
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
-                    <div  class="notification-head">                     
-                        <div class="order-number">Order Number : {{orderID}}</div>   
-                          <span class="material-icons">assignment_turned_in</span>
-                        <div class="order-status">Status: For Approval</div>
-                      </div>
-                </a>
-              </div>
-            {{/ifEquals}}
-
-            {{#ifEquals readStatus 1}}
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
-                    <div  class="notification-head">                     
-                        <div class="order-number">Order Number : {{orderID}}</div>   
-                          <span class="material-icons">check_circle</span>
-                        <div class="order-status">Status: {{status}}</div>
-                      </div>
-                </a>
-              </div>
-            {{/ifEquals}}
-            
-          {{/ifEquals}}
-
-          {{!-- FOR APPROVAL NOTIFICATION --}}
-          {{#ifEquals status "For Approval"}}
-            {{#ifEquals readStatus 2}}
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
-                    <div  class="notification-head">                     
-                        <div class="order-number">Order Number : {{orderID}}</div>   
-                          <span class="material-icons" style="color: #444444">check_circle</span>
-                        <div class="order-status">Status: {{status}}</div>
-                      </div>
-                </a>
-              </div>
-
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
-                    <div  class="notification-head">                     
-                        <div class="order-number">Order Number : {{orderID}}</div>   
-                          <span class="material-icons">assignment_turned_in</span>
-                        <div class="order-status">Status: In Transit</div>
-                      </div>
-                </a>
-              </div>
-            {{/ifEquals}}
-
-            {{#ifEquals readStatus 1}}
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
-                    <div  class="notification-head">                     
-                        <div class="order-number">Order Number : {{orderID}}</div>   
-                          <span class="material-icons" style="color: #444444">check_circle</span>
                         <div class="order-status">Status: {{status}}</div>
                       </div>
                 </a>
@@ -159,12 +123,50 @@
 
           {{!-- IN TRANSIT NOTIFICATION --}}
           {{#ifEquals status "In Transit"}}
-            {{#ifEquals readStatus 1}}
-              <div class="notification-container">
-                <a href="http://127.0.0.1:5501/public/test.html" class="notification-link">
+            {{#ifEquals readStatus 2}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
                     <div  class="notification-head">                     
                         <div class="order-number">Order Number : {{orderID}}</div>   
-                          <span class="material-icons" style="color: #444444">check_circle</span>
+                          <span class="material-icons" style="color: #444444">local_shipping</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                                                <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">assignment_turned_in</span>
+                        <div class="order-status">Status: For Approval</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+
+            {{#ifEquals readStatus 1}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons" style="color: #444444">local_shipping</span>
+                        <div class="order-status">Status: {{status}}</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+            
+          {{/ifEquals}}
+
+          {{!-- FOR APPROVAL NOTIFICATION --}}
+          {{#ifEquals status "For Approval"}}
+            {{#ifEquals readStatus 1}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons" style="color: #444444">assignment_turned_in</span>
                         <div class="order-status">Status: {{status}}</div>
                       </div>
                 </a>
@@ -176,10 +178,25 @@
         {{/each}}
 
       </main>
+
+      <script>
+        $('.notification-container').on('click', function(e) {
+            var href = "/order_details";
+            var newQuery = "/" + $(this).attr("value");
+            var newHref = href + newQuery;
+            console.log("CLICK : " +newHref);
+            window.location.href = newHref;
+        });
+
+      </script>
       
       <!-- partial -->
-      <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-      <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'>
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
       </script><script  src="./notifications.js"></script>
+
+      
+
 </body>
 </html>

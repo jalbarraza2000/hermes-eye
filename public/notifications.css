@@ -26,6 +26,7 @@ main {
 }
 
 .notification-container:hover {
+  cursor: pointer;
   background-color: #02acf5;
 
   transition-duration: 0.5s;

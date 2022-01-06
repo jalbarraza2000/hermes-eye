@@ -162,7 +162,7 @@ exports.getNotifications = (req, res)=>{
                     return console.error(error.message);
                 }
 
-                console.log('Rows affected:', results.affectedRows);
+                // console.log('Rows affected:', results.affectedRows);
                 req.session.notifs = 0;
 
                 if(req.session.isAdmin){
