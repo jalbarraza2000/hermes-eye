@@ -138,8 +138,13 @@
           </div>
 
           <div class="orderInformationBox">
-            <h6 class="infoTitle" id="orderStatus" value="{{status}}">Status</h6>
+            <h6 class="infoTitle" id="orderStatus" value="{{status}}">Order Status</h6>
             <h6 class="infoContent">{{status}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle" id="issueStatus" value="{{issueStatus}}">Issue Status</h6>
+            <h6 class="infoContent">{{issueStatus}}</h6>
           </div>
 
           <div class="orderInformationBox">
@@ -439,21 +444,9 @@
         });
 
         $( document ).ready(function() {
-            if($('#orderStatus').attr("value") == "Verified") {
+            if($('#orderStatus').attr("value") == "Verified" || $('#orderStatus').attr("value") == "In Transit") {
               $( "#approve-button" ).addClass( "disabled" );
               $( "#complete-button" ).addClass( "disabled" );
-              $( "#resolve-button" ).addClass( "disabled" );
-            }
-            else if($('#orderStatus').attr("value") == "In Transit") {
-              $( "#approve-button" ).addClass( "disabled" );
-              $( "#resolve-button" ).addClass( "disabled" );
-            }
-            else if($('#orderStatus').attr("value") == "Pending") {
-              $( "#approve-button" ).addClass( "disabled" );
-              $( "#complete-button" ).addClass( "disabled" );
-              $( "#pending-button" ).addClass( "disabled" );
-            }
-            else if($('#orderStatus').attr("value") == "Resolved") {
               $( "#resolve-button" ).addClass( "disabled" );
             }
             else if($('#orderStatus').attr("value") == "Delivered") {
@@ -461,6 +454,17 @@
               $( "#resolve-button" ).addClass( "disabled" );
             }
             else {
+              $( "#resolve-button" ).addClass( "disabled" );
+              $( "#complete-button" ).addClass( "disabled" );
+            }
+
+            if($('#issueStatus').attr("value") == "Pending") {
+              $( "#approve-button" ).addClass( "disabled" );
+              $( "#complete-button" ).addClass( "disabled" );
+              $( "#pending-button" ).addClass( "disabled" );
+              $( "#resolve-button" ).removeClass( "disabled" );
+            }
+            else if($('#issueStatus').attr("value") == "Resolved") {
               $( "#resolve-button" ).addClass( "disabled" );
             }
         });
