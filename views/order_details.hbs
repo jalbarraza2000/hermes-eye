@@ -29,6 +29,7 @@
 
           var longLat = {{{result}}};
           var length = longLat.length;
+          console.log(length)
           if(length > 0) {
             var map = new ol.Map({
                 target: 'map',
@@ -38,7 +39,7 @@
                 })
                 ],
                 view: new ol.View({
-                center: ol.proj.fromLonLat([longLat[0].latitude, longLat[0].longitude]),
+                center: ol.proj.fromLonLat([longLat[0].longitude, longLat[0].latitude]),
                 zoom: 18
                 })
             });
@@ -66,11 +67,11 @@
             });
             map.addLayer(currentIcon);
             map.addLayer(previousIcon);
-            var marker = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[0].latitude, longLat[0].longitude])));
+            var marker = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[0].longitude, longLat[0].latitude])));
             currentIcon.getSource().addFeature(marker);
 
             for(let i = 1; i < length; i++) {
-              var marker1 = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[i].latitude, longLat[i].longitude])));
+              var marker1 = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[i].longitude, longLat[i].latitude])));
               previousIcon.getSource().addFeature(marker1);
             }
             

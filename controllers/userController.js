@@ -322,7 +322,7 @@ exports.getCreateOrder = (req, res) => {
 }
 
 exports.postCreateOrder = (req, res) => {
-    db.query('INSERT INTO orders (clientID, shippedVia, businessStyle, status) VALUES(?,?,?,?)', [req.body.clientID, req.body.shippedVia, req.body.businessStyle, 'For Approval'], function(err) {
+    db.query('INSERT INTO orders (orderID, clientID, shippedVia, businessStyle, status) VALUES(?,?,?,?,?)', [req.body.orderID, req.body.clientID, req.body.shippedVia, req.body.businessStyle, 'For Approval'], function(err) {
         if (err) {
           return console.log(err.message);
         }
