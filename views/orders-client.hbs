@@ -4,44 +4,45 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="style1.css">
         <link rel="stylesheet" type="text/css" href="orders.css">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <script src="/js/jquery.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
 
         <title>Orders | Hermes Eye</title>
     </head>
     <body>
-        <header id="head">
-            <nav>
-            <div class="logo">
-                <img src="img/HermesEye icon.png"></img>
+        <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
+            <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                <a class="nav-item nav-link" href="home" method="get">Home</a>
+                <a class="nav-item nav-link active" href="orders" method="get">Orders</a>
+                <a class="nav-item nav-link" href="notifications" method="get" style="display: flex;"><span>Notifications</span>
+                    {{#if_greater notifs 0}}
+                        <span class="icon-button-badge">{{notifs}}</span>
+                    {{/if_greater}}
+                            
+                    <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
+                        <span class="material-icons">notifications</span>
+                    </button>
+                </a>
+                <a class="nav-item nav-link" href="profile">Profile</a>
+                </div>
             </div>
-            <ul class="navlist">
-                <li><a href="home" method="get">Home</a></li>
-                <li><a href="orders" method="get">Orders</a></li>
-                <li class="li-notifications">
-                    <a href="notifications" method="get">Notifications
-                        <button type="button" class="icon-button">
-                            <span class="material-icons">notifications</span>
-                            
-                            {{#if_greater notifs 0}}
-                            <span class="icon-button-badge">{{notifs}}</span>
-                            {{/if_greater}}
-                            
-                        </button>
-                    </a>
-                </li>
-
-                <li><a href="profile" method="get">Profile</a></li>
-            </ul>
-            </nav>
-        </header>
+        </nav>
         
         <main>
         <div id="title_header"><h1>Orders - Client</h1></div>
       </main>
         
         <!-- partial -->
-        <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
-        <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script><script  src="./home.js"></script> -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
 </html>

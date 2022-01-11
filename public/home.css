@@ -13,7 +13,7 @@ main {
   display: block;
   width: 100%;
   padding: 10px 5%;
-  height: 80px;
+  height: auto;
   border: 1px solid #7acdf1;
   text-align: center;
   color: black;
