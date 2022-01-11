@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;400;800&display=swap");
+
 main {
   padding: 10px;
 }
@@ -23,10 +25,12 @@ main {
   width: fit-content;
   font-size: 25px;
   text-decoration: none;
-  font-family: "Montserrat";
+  font-family: "Nunito";
+  font-weight: 800;
   padding: 15px;
   border-radius: 10px;
-  background-color: #c3e0e5;
+  /* background-color: #c3e0e5; */
+  background-color: #7acdf1;
   color: black;
   margin: 10px auto;
   transition-duration: 0.5s;
@@ -35,7 +39,7 @@ main {
 }
 
 #signout:hover {
-  background-color: #7acdf1;
-  color: black;
+  background-color: #1b3c65;
+  color: white;
   margin: 10px auto;
 }

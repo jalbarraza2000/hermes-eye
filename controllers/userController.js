@@ -28,8 +28,29 @@ exports.getIndex = (req, res)=>{
             
             req.session.notifs = row[0].notifs;
 
-            if(req.session.isAdmin){
+            if(req.session.isOwner){
                 res.render("home.hbs", {
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    notifs : req.session.notifs
+                })
+            }
+            else if(req.session.isAdmin){
+                res.render("home-admin.hbs", {
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    notifs : req.session.notifs
+                })
+            }
+            else if(req.session.isSales){
+                res.render("home-sales.hbs", {
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    notifs : req.session.notifs
+                })
+            }
+            else if(req.session.isLogistics){
+                res.render("home-logistics.hbs", {
                     firstname: req.session.firstname,
                     lastname: req.session.lastname,
                     notifs : req.session.notifs
@@ -85,11 +106,45 @@ exports.getLogin = async (req,res)=>{
                 req.session.firstname = dbFname
                 req.session.lastname = dbLname
                 
-                if(dbRole == "Admin"){
+                if(dbRole == "Owner"){
+                    req.session.isOwner = true
+
+                    req.session.isAdmin = false
+                    req.session.isSales = false
+                    req.session.isLogistics = false
+                    req.session.isClient = false
+                }
+                else if (dbRole == "Admin"){
                     req.session.isAdmin = true
+
+                    req.session.isOwner = false
+                    req.session.isSales = false
+                    req.session.isLogistics = false
+                    req.session.isClient = false
+                }
+                else if (dbRole == "Sales"){
+                    req.session.isSales = true
+
+                    req.session.isOwner = false
+                    req.session.isAdmin = false
+                    req.session.isLogistics = false
+                    req.session.isClient = false
+                }
+                else if (dbRole == "Logistics"){
+                    req.session.isLogistics = true
+
+                    req.session.isOwner = false
+                    req.session.isAdmin = false
+                    req.session.isSales = false
+                    req.session.isClient = false
                 }
                 else{
+                    req.session.isClient = true
+
+                    req.session.isOwner = false
                     req.session.isAdmin = false
+                    req.session.isSales = false
+                    req.session.isLogistics = false
                 }
     
                 if(remember_me){    
@@ -120,7 +175,7 @@ exports.getOrders = (req, res)=>{
 
     if(req.session.username){   
 
-        if(req.session.isAdmin){
+        if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
             db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.status, c.branch, c.contactPersonFName, c.contactPersonLName FROM orders o JOIN clients c ON o.clientID = c.clientID", (err, rows) => {
                 if(err) throw err;
                 res.render('orders', {rows: rows, notifs : req.session.notifs});
@@ -136,6 +191,7 @@ exports.getOrders = (req, res)=>{
     else{
         res.redirect("/") 
     }
+
 }
 
 // update notification status
@@ -165,7 +221,7 @@ exports.getNotifications = (req, res)=>{
                 // console.log('Rows affected:', results.affectedRows);
                 req.session.notifs = 0;
 
-                if(req.session.isAdmin){
+                if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
                     res.render("notifications.hbs", {
                         notifs : req.session.notifs,
                         notifications: req.session.notifications
@@ -277,14 +333,27 @@ exports.getRegister = (req, res)=>{
 
 }
 
+exports.getUsers = (req, res)=>{
+
+    if(req.session.username){   
+        res.render("users.hbs")
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
 exports.getProfile = (req, res)=>{
 
     if(req.session.username){   
                
-        if(req.session.isAdmin){
+        if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
             res.render("profile.hbs", {
                 notifs : req.session.notifs
             })
+        }
+        else if(req.session.isAdmin){
+            res.render("profile-admin.hbs")
         }
         else{
             res.render("profile-client.hbs", {

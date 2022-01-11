@@ -1,0 +1,47 @@
+#title_header {
+  color: #1b3c65;
+  text-transform: uppercase;
+  padding: 10px;
+}
+
+.user_header {
+  display: flex;
+  flex-direction: row;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.page_information_orders {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-div {
+  border: 2px solid grey;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+.table-header {
+  border-bottom: 2px solid grey;
+  padding: 10px;
+}
+
+.table-body {
+  padding: 10px;
+}
+
+.form-header {
+  display: flex;
+  flex-direction: row;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.form-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
