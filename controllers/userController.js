@@ -29,11 +29,21 @@ exports.getIndex = (req, res)=>{
             req.session.notifs = row[0].notifs;
 
             if(req.session.isOwner){
-                res.render("home.hbs", {
-                    firstname: req.session.firstname,
-                    lastname: req.session.lastname,
-                    notifs : req.session.notifs
-                })
+                db.query("SELECT COUNT(*) AS numOrders FROM orders WHERE MONTH(NOW())", (err, count) => {
+                    if(err) throw err;
+
+                    db.query("SELECT SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL", (err, avgTime) => {
+                        if (err) throw err;
+
+                        res.render("home.hbs", {
+                            firstname: req.session.firstname,
+                            lastname: req.session.lastname,
+                            notifs : req.session.notifs,
+                            numOrders: count[0].numOrders,
+                            timeDiff: avgTime[0].avgtimediff
+                        })
+                    });
+                });
             }
             else if(req.session.isAdmin){
                 res.render("home-admin.hbs", {
