@@ -12,7 +12,7 @@
 
         <title>Orders | Hermes Eye</title>
     </head>
-    <body>
+    <body style="background-color: #d5dfeb">
         <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
             <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
@@ -48,24 +48,48 @@
                 </div>
 
                 <div class="table-div">
-                    <table style="font-family: Nunito; text-align: center; width: 100%;">
-                        <tbody>
+                    <table class="content-table">
+                        <thead>
                             <tr>
                                 <th class="table-header">Order ID</th>
                                 <th class="table-header">Client Branch</th>
                                 <th class="table-header">Contact Person</th>
                                 <th class="table-header">Shipped On</th>
                                 <th class="table-header">Status</th>
-                                <th class="table-header"></th>
                             </tr>
+                        </thead>
+                        <tbody>
                             {{#each rows}}
-                            <tr>
+                            <tr class="table-row view_order" href="/order_details" value={{this.orderID}}>
                                 <td class="table-body">{{this.orderID}}</td>
                                 <td class="table-body">{{this.branch}}</td>
                                 <td class="table-body">{{this.contactPersonFName}} {{this.contactPersonLName}}</td>
                                 <td class="table-body">{{this.shippedOn}}</td>
-                                <td class="table-body">{{this.status}}</td>
-                                <td class="table-body"><button type="button" class="btn btn-primary view_order" value={{this.orderID}} style="font-family: Nunito; font-weight: 800;" href="/order_details">View</button></td>
+                                <td class="table-body">
+                                    {{#ifEquals this.status "For Approval"}}
+                                        <div class="statusChecker-approval">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status "In Transit"}}
+                                        <div class="statusChecker-transit">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status "Delivered"}}
+                                        <div class="statusChecker-delivered">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status "Verified"}}
+                                        <div class="statusChecker-verified">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+                                </td>
                             </tr>
                             {{/each}}
                         </tbody>

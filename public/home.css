@@ -63,13 +63,13 @@ main {
   padding: 20px;
   display: flex;
   border-radius: 5px;
-  background: #E8FBE1;
+  background: #FCEBF6;
   margin-bottom: 10px;
   cursor: pointer;
 }
 
 .orderBox-content-deliver:hover {
-  background: #b4ff99;
+  background: #ff8fd7;
 }
 
 .branchText {
