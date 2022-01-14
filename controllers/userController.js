@@ -346,7 +346,11 @@ exports.getRegister = (req, res)=>{
 exports.getUsers = (req, res)=>{
 
     if(req.session.username){   
-        res.render("users.hbs")
+        db.query("SELECT * FROM users", (err, rows) => {
+            if(err) throw err;
+        
+            res.render("users.hbs", {users: rows});
+         });
     }
     else{
         res.redirect("/") 
@@ -454,6 +458,68 @@ exports.postResolveOrder = (req, res) => {
             res.redirect('back');
         });
     });
+}
+
+exports.getUpdateUser = (req, res) => {
+    if(req.session.username){         
+        // reading fields from hbs
+        let userID = req.body.userID
+        let username = req.body.username
+        let first_name = req.body.firstname
+        let last_name = req.body.lastname
+        let role = req.body.role
+
+        //checking if valid
+        body("username").notEmpty();
+        body("first_name").notEmpty();
+        body("last_name").notEmpty();
+        body("role").notEmpty();    
+
+        //check errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            console.log("IS EMPTY");
+            res.render("users.hbs", {
+                errors:errors
+            });
+        }
+        else{
+            db.query(`SELECT username FROM users WHERE username = "${username}";`, function(err, result){
+                if(err) throw err;
+                
+                if(result.length < 1){ //empty result, no match username
+                    //update user to db
+                    db.query(`UPDATE users
+                            SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
+                            WHERE userID = ${userID};`, (err, row) => {
+                        if(err) throw err;
+
+                        console.log("UPDATED");
+                        console.log('Rows affected:', row.affectedRows);
+                    
+                        // res.render("users.hbs", {
+                        //     message:"Updated successful"
+                        // })
+
+                        res.redirect("/users")
+
+                    });
+                }
+                else{ 
+                    //existing user
+                    console.log("UNSUCCESSFULLY UPDATED");
+                    res.render("users.hbs", {
+                        errors:"Error in registering: username already in use"
+                    })                    
+                }
+            });
+             
+                       
+        }
+    }
+    else{
+        res.redirect("/") 
+    }
 }
 
 exports.getSignout = (req,res)=>{
