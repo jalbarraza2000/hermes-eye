@@ -169,3 +169,30 @@ main {
   width: 30%;
   justify-content: space-between;
 }
+
+/* Pending Orders CSS */
+
+.pendingOrders {
+  padding: 20px;
+  margin-bottom: 40px;
+  background: #f7f7f7;
+  border-radius: 5px;
+}
+
+.pendingTable {
+  width: 100%;
+}
+
+th {
+  font-size: 1.4rem;
+}
+
+.pending-header, .pending-body {
+  font-family: Nunito;
+}
+
+.pending-headerText {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}

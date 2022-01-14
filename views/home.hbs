@@ -82,12 +82,42 @@
             </div>
         </div>
 
+        <div class="pending-container container">
+          <div class="pending-headerText">
+                <h3 style="font-family: Nunito; margin-bottom: 20px; font-weight: 800;">Pending Orders</h3>
+                <button class="btn btn-primary">
+                    <span style="font-family: Nunito; font-weight: 800;">View All</span>
+                </button>
+          </div>
+          <div class="pendingOrders">
+              <table class="pendingTable">
+                  <tbody>
+                      <tr>
+                          <th class="pending-header">Order ID</th>
+                          <th class="pending-header">Status</th>
+                          <th class="pending-header">Justification</th>
+                          <th class="pending-header">Resolution</th>
+                      </tr>
+
+                      {{#each issues}}
+                      <tr>
+                          <td class="pending-body">{{this.orderID}}</td>
+                          <td class="pending-body">{{this.status}}</td>
+                          <td class="pending-body">{{this.justification}}</td>
+                          <td class="pending-body">{{this.resolution}}</td>
+                      </tr>
+                      {{/each}}
+                  </tbody>
+              </table>
+          </div>  
+        </div>
+
         <div class="delivery-container container">
             <h3 style="font-family: Nunito; margin-bottom: 20px; font-weight: 800;">Delivery Information</h3>
             <div class="deliveryBoxes">
                 <div class="avgBox">
                     <div class="deliveryBox">
-                        <h3 style="font-weight: 400;">Total Number of Completed Orders</h3>
+                        <h3 style="font-weight: 400;">Total Number of Delivered Orders</h3>
                         <h1 style="font-weight: 800;">{{compOrders}}</h1>
                     </div>
                     <div class="deliveryBox">
@@ -97,7 +127,7 @@
                 </div>
                 <div class="perBranch">
                     <div class="perBranch-header">
-                        <h5 style="font-weight: 800;">Average Delivery Time Per Branch</h5>
+                        <h5 style="font-weight: 400;">Average Delivery Time Per Branch</h5>
                         <button class="btn btn-primary">
                             <span style="font-weight: 800;">View All</span>
                         </button>
@@ -114,6 +144,8 @@
                 </div>
             </div>
         </div>
+
+
     </div>
       <!-- partial -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

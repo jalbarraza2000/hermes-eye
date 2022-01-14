@@ -43,18 +43,23 @@ exports.getIndex = (req, res)=>{
 
                                 db.query("SELECT c.branch, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
                                     if (err) throw err;
-                                    
-                                    res.render("home.hbs", {
-                                        firstname: req.session.firstname,
-                                        lastname: req.session.lastname,
-                                        notifs : req.session.notifs,
-                                        forApprove: forApprove,
-                                        inTransit : inTransit,
-                                        delivered : delivered,
-                                        avgTime: avgTime[0].avgtimediff,
-                                        compOrders: avgTime[0].deliveredOrders,
-                                        result: result
-                                    })
+
+                                    db.query("SELECT * FROM issues LIMIT 5;", (err, issues) => {
+                                        if (err) throw err;
+                                        
+                                        res.render("home.hbs", {
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            notifs : req.session.notifs,
+                                            forApprove: forApprove,
+                                            inTransit : inTransit,
+                                            delivered : delivered,
+                                            avgTime: avgTime[0].avgtimediff,
+                                            compOrders: avgTime[0].deliveredOrders,
+                                            result: result,
+                                            issues: issues
+                                        })
+                                    });
                                 });
                             });
                         });
