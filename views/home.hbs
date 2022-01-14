@@ -12,7 +12,7 @@
 
     <title>Home | Hermes Eye</title>
 </head>
-<body>
+<body style="background-color: #d5dfeb">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
         <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
@@ -44,16 +44,74 @@
             </div>
         </div>
 
+        <hr>
+
         <div class="dashboard-container container">
-            <div class="numOrders">
-                <h4>Number of Orders this Month</h4>
-                <h3>{{numOrders}}</h3>
-                <button class="btn btn-primary">View All Orders</button>
+            <div class="orderBox">
+                <div class="orderBox-header">
+                    <h5 style="font-weight: 800;">For Approval</h5>
+                </div>
+                {{#each forApprove}}
+                    <div class="orderBox-content-approve" value="{{this.orderID}}">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">bookmark</span>
+                        <h7 class="branchText">{{this.branch}}</h7>
+                    </div>
+                {{/each}}
             </div>
-            <div class="numOrders">
-                <h4>Average Time of Deliveries</h4>
-                <h3>{{timeDiff}}</h3>
-                <button class="btn btn-primary">View Detailed Breakdown</button>
+            <div class="orderBox">
+                <div class="orderBox-header">
+                    <h5 style="font-weight: 800;">In Transit</h5>
+                </div>
+                {{#each inTransit}}
+                    <div class="orderBox-content-transit" value="{{this.orderID}}">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">local_shipping</span>
+                        <h7 class="branchText">{{this.branch}}</h7>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="orderBox">
+                <div class="orderBox-header">
+                    <h5 style="font-weight: 800;">Delivered</h5>
+                </div>
+                {{#each delivered}}
+                    <div class="orderBox-content-deliver" value="{{this.orderID}}">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">check_box</span>
+                        <h7 class="branchText">{{this.branch}}</h7>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="delivery-container container">
+            <h3 style="font-family: Nunito; margin-bottom: 20px; font-weight: 800;">Delivery Information</h3>
+            <div class="deliveryBoxes">
+                <div class="avgBox">
+                    <div class="deliveryBox">
+                        <h3 style="font-weight: 400;">Total Number of Completed Orders</h3>
+                        <h1 style="font-weight: 800;">{{compOrders}}</h1>
+                    </div>
+                    <div class="deliveryBox">
+                        <h3 style="font-weight: 400;">Average Delivery Time</h3>
+                        <h1 style="font-weight: 800;">{{avgTime}}</h1>
+                    </div>
+                </div>
+                <div class="perBranch">
+                    <div class="perBranch-header">
+                        <h5 style="font-weight: 800;">Average Delivery Time Per Branch</h5>
+                        <button class="btn btn-primary">
+                            <span style="font-weight: 800;">View All</span>
+                        </button>
+                    </div>
+                    {{#each result}}
+                        <div class="BranchBox">
+                            <span class="material-icons" style="font-size: 30px; margin-right: 20px;">timer</span>
+                            <div class="BranchInfo">
+                                <h7 class="branchText">{{this.branch}}</h7>
+                                <h7 class="branchText">{{this.avgtimediff}}</h7>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
             </div>
         </div>
     </div>

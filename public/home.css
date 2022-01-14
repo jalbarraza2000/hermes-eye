@@ -24,14 +24,148 @@ main {
   text-transform: uppercase;
 }
 
-.numOrders {
+/* Order Items CSS */
+
+.orderBox-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: Nunito;
+  margin-bottom: 10px;
+}
+
+.orderBox-content-approve {
+  padding: 20px;
+  display: flex;
+  border-radius: 5px;
+  background: #DDF2FD;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.orderBox-content-approve:hover {
+  background: #a1dfff;
+}
+
+.orderBox-content-transit {
+  padding: 20px;
+  display: flex;
+  border-radius: 5px;
+  background: #FAF8DF;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.orderBox-content-transit:hover {
+  background: #fff89e;
+}
+
+.orderBox-content-deliver {
+  padding: 20px;
+  display: flex;
+  border-radius: 5px;
+  background: #E8FBE1;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.orderBox-content-deliver:hover {
+  background: #b4ff99;
+}
+
+.branchText {
+  font-family: Nunito;
+  font-weight: 800;
+  margin-top: 3px;
+}
+
+.orderBox {
   display: flex;
   flex-direction: column;
-  text-align: center;
+  width: 33%;
+  padding: 30px;
+  border-radius: 8px;
+  background: #f7f7f7;
+  margin-bottom: 20px;
 }
+
+@media only screen and (max-width: 600px) {
+  .orderBox {
+    width: 100%;
+  }
+}  
 
 .dashboard-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 30px;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+
+/* Delivery Time CSS */
+
+.delivery-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px;
+  padding-top: 5px;
+  flex-wrap: wrap;
+}
+
+.deliveryBoxes {
+  display: flex;
+  justify-content: space-between;
+}
+
+.deliveryBox {
+  width: 100%;
+  height: 48%;
+  padding: 30px;
+  border-radius: 8px;
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: Nunito;
+}
+
+.BranchBox {
+  display: flex;
+  padding: 20px;
+  background: #ECE3FC;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.perBranch {
+  display:flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 68%;
+  background: #f7f7f7;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+.BranchInfo {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-family: Nunito;
+}
+
+.perBranch-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: Nunito;
+  margin-bottom: 15px;
+}
+
+.avgBox {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  justify-content: space-between;
 }

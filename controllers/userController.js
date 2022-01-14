@@ -29,19 +29,35 @@ exports.getIndex = (req, res)=>{
             req.session.notifs = row[0].notifs;
 
             if(req.session.isOwner){
-                db.query("SELECT COUNT(*) AS numOrders FROM orders WHERE MONTH(NOW())", (err, count) => {
+                db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'For Approval' LIMIT 3;", (err, forApprove) => {
                     if(err) throw err;
 
-                    db.query("SELECT SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL", (err, avgTime) => {
+                    db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'In Transit' ORDER BY o.shippedOn DESC LIMIT 3;", (err, inTransit) => {
                         if (err) throw err;
 
-                        res.render("home.hbs", {
-                            firstname: req.session.firstname,
-                            lastname: req.session.lastname,
-                            notifs : req.session.notifs,
-                            numOrders: count[0].numOrders,
-                            timeDiff: avgTime[0].avgtimediff
-                        })
+                        db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'Delivered' ORDER BY o.completedOn DESC LIMIT 3;", (err, delivered) => {
+                            if (err) throw err;
+
+                            db.query("SELECT COUNT(*) AS deliveredOrders, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL;", (err, avgTime) => {
+                                if(err) throw err;
+
+                                db.query("SELECT c.branch, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
+                                    if (err) throw err;
+                                    
+                                    res.render("home.hbs", {
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        notifs : req.session.notifs,
+                                        forApprove: forApprove,
+                                        inTransit : inTransit,
+                                        delivered : delivered,
+                                        avgTime: avgTime[0].avgtimediff,
+                                        compOrders: avgTime[0].deliveredOrders,
+                                        result: result
+                                    })
+                                });
+                            });
+                        });
                     });
                 });
             }
