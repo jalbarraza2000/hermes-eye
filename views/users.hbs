@@ -30,6 +30,15 @@
       
       <main>
         <div id="title_header"><h1>User Accounts</h1></div>
+        
+        <div class="error">ERROR</div>
+        {{#if errors}}
+            <div class="error">{{errors}}</div>
+        {{/if}}
+
+        {{#if message}}
+            <div class="message">{{message}}</div>
+        {{/if}}
 
         <div class="container-sm">
           <div class="user_header">
@@ -49,22 +58,22 @@
                         <th class="table-header">Last Name</th>
                         <th class="table-header">Role</th>
                         <th class="table-header"></th>
+                        <th class="table-header"></th>
                     </tr>
-                    {{!-- {{#each rows}} --}}
-                    <tr>
-                        <td class="table-body">0</td>
-                        <td class="table-body">username</td>
-                        <td class="table-body">Giannis</td>
-                        <td class="table-body">Antetokounmpo</td>
-                        <td class="table-body">Logistics</td>
-                        {{!-- <td class="table-body">{{this.orderID}}</td>
-                        <td class="table-body">{{this.branch}}</td>
-                        <td class="table-body">{{this.contactPersonFName}}</td>
-                        <td class="table-body">{{this.shippedOn}}</td>
-                        <td class="table-body">{{this.status}}</td> --}}
-                        <td class="table-body"><button type="button" class="btn btn-primary view_order" value={{this.orderID}} style="font-family: Nunito; font-weight: 800;" href="/order_details">View</button></td>
-                    </tr>
-                    {{!-- {{/each}} --}}
+                    {{#each users}}
+                        {{#if_greater userID 0}}
+                        <tr>
+                            <td class="table-body" id="userID{{this.userID}}" value="{{this.userID}}">{{this.userID}}</td>
+                            <td class="table-body" id="username{{this.userID}}">{{this.username}}</td>
+                            <td class="table-body" id="firstname">{{this.firstname}}</td>
+                            <td class="table-body" id="lastname">{{this.lastname}}</td>
+                            <td class="table-body" id="role">{{this.role}}</td>
+
+                            {{!-- <td class="table-body"><button type="button" class="btn btn-primary view_order" value="1" style="font-family: Nunito; font-weight: 800;" href="/create_order">View</button></td> --}}
+                            <td class="table-body"><button type="button" class="btn btn-primary view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#view_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Edit</button></td>
+                        </tr>
+                    {{/if_greater}}
+                    {{/each}}
                 </tbody>
               </table>
             </div>
@@ -72,7 +81,111 @@
 
       </main>
       
+      <!-- modal itself -->
+      {{#each users}}
+        {{#if_greater userID 0}}
+            <div class="modal fade" id="view_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Edit user account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" action="updateUser">
+                        <div class="form-group">
+                            <input type ="hidden" name="userID" value={{this.userID}}>
+                            <label for="inputUsername{{this.userID}}">Username:</label>
+                            <input type="text" class="form-control" id="inputUsername{{this.userID}}" name="username" placeholder={{this.username}} value={{this.username}} required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputFname{{this.userID}}">First name:</label>
+                            <input type="text" class="form-control" id="inputFname{{this.userID}}" name="firstname" placeholder={{this.firstname}} value={{this.firstname}} required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputLname{{this.userID}}">Last name:</label>
+                            <input type="text" class="form-control" id="inputLname{{this.userID}}" name="lastname" placeholder={{this.lastname}} value={{this.lastname}} required>
+                        </div>
+
+
+                        <div class = "form-group col-md-4">
+                            <label for="inputUserRole{{this.userID}}">Choose role  :</label>
+                            <select id="inputUserRole{{this.userID}}" name="role" class="form-control">
+
+                                {{#ifEquals role "Owner"}}
+                                    <option value="Owner" selected>Owner</option>
+                                {{/ifEquals}}
+
+                                {{#ifEquals role "Sales"}}
+                                    <option value="Sales" selected>Sales User</option>
+                                    <option value="Logistics">Logistics User</option>
+                                {{/ifEquals}}
+
+                                {{#ifEquals role "Logistics"}}
+                                    <option value="Sales">Sales User</option>
+                                    <option value="Logistics" selected>Logistics User</option>
+                                {{/ifEquals}}
+
+                                {{#ifEquals role "Client"}}
+                                    <option value="Client" selected>Client User</option>
+                                {{/ifEquals}}
+                                
+                            </select>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+                    </form>
+
+
+                    {{!-- <label for="modal-username{{this.userID}}" class="form-label">Username:</label>
+                    <input type="text" class="form-control" id="modal-username{{this.userID}}" placeholder={{this.username}}>
+
+                    <label for="modal-firstname{{this.userID}}" class="form-label">Firstname:</label>
+                    <input type="text" class="form-control" id="modal-firstname{{this.userID}}" placeholder={{this.firstname}}>
+
+                    <label for="modal-lastname{{this.userID}}" class="form-label">Lastname:</label>
+                    <input type="text" class="form-control" id="modal-lastname{{this.userID}}" placeholder={{this.lastname}}> --}}
+
+                </div>
+                {{!-- <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div> --}}
+                </div>
+            </div>
+            </div>
+        {{/if_greater}}
+      {{/each}}
+        
+
       <!-- partial -->
+      <script>
+
+        /*$('.view_order').on('click', function(e) {    
+            window.location.href = $(this).attr("href");
+        });
+
+        $('.submitButton').on('click', function(e) {  
+            console.log("SUBMIT BUTTON CLICKED");  
+            var modalNum = $(".submitButton").val();
+            var modal = "#view_modal";
+            modal = modal.concat(modalNum);
+            console.log(modal);
+
+            var modalUsername = "modal-username";
+            modalUsername = modalUsername.concat(modalNum);
+            console.log(modalUsername);
+
+            var inputNewUsername = $(modalUsername).val();
+            console.log(inputNewUsername);
+  
+        });
+
+        */
+    </script>
+
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

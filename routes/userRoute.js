@@ -18,6 +18,7 @@ routes.post("/approve-order", userController.postApprovalOrder)
 routes.post("/complete-order", userController.postCompleteOrder)
 routes.post("/pending-order", userController.postPendingOrder)
 routes.post("/resolve-order", userController.postResolveOrder)
+routes.post("/updateUser", userController.getUpdateUser)
 routes.get("/signout", userController.getSignout)
 
 module.exports = routes
