@@ -1,0 +1,75 @@
+.form-header{
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+  }
+  
+  .form-body{
+    margin-top: 50px;
+    margin: auto;
+    width:35%;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 5px;
+  }
+
+  .page_information_orders {
+    display:flex;
+    flex-direction: column;
+  }
+
+  .order-form {
+      display: flex;
+      flex-direction: column;
+  }
+
+  .input-groupForm {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+  }
+
+  .form-proper {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-between;
+  }
+
+  .input-groupForm label {
+      font-family: Nunito;
+      margin-bottom: 3px;
+  }
+
+  .autocomplete {
+      position: relative;
+  }
+
+  .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    border-bottom: none;
+    border-top: none;
+    z-index: 99;
+    /*position the autocomplete items to be the same width as the container:*/
+    top: 100%;
+    left: 0;
+    right: 0;
+  }
+  .autocomplete-items div {
+    padding: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
+  }
+  .autocomplete-items div:hover {
+    /*when hovering an item:*/
+    background-color: #e9e9e9;
+  }
+  .autocomplete-active {
+    /*when navigating through the items using the arrow keys:*/
+    background-color: DodgerBlue !important;
+    color: #ffffff;
+  }
