@@ -31,7 +31,6 @@
       <main>
         <div id="title_header"><h1>User Accounts</h1></div>
         
-        <div class="error">ERROR</div>
         {{#if errors}}
             <div class="error">{{errors}}</div>
         {{/if}}
@@ -69,8 +68,12 @@
                             <td class="table-body" id="lastname">{{this.lastname}}</td>
                             <td class="table-body" id="role">{{this.role}}</td>
 
-                            {{!-- <td class="table-body"><button type="button" class="btn btn-primary view_order" value="1" style="font-family: Nunito; font-weight: 800;" href="/create_order">View</button></td> --}}
                             <td class="table-body"><button type="button" class="btn btn-primary view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#view_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Edit</button></td>
+
+                            {{#ifNotEquals role "Owner"}}
+                                <td class="table-body"><button type="button" class="btn btn-danger view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#delete_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Delete</button></td>
+                            {{/ifNotEquals}}
+                            
                         </tr>
                     {{/if_greater}}
                     {{/each}}
@@ -81,7 +84,7 @@
 
       </main>
       
-      <!-- modal itself -->
+      <!-- delete modal itself -->
       {{#each users}}
         {{#if_greater userID 0}}
             <div class="modal fade" id="view_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
@@ -153,6 +156,34 @@
                 {{!-- <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div> --}}
+                </div>
+            </div>
+            </div>
+
+            <div class="modal fade" id="delete_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100" id="modal-title">Delete account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" action="updateUser">
+                        <div class="form-group">
+                            <input type ="hidden" name="userID" value={{this.userID}}>
+                        </div>
+
+                        <h4 class="text-center w-100">Are you sure you want to delete <br> {{this.username}} account?</h4>
+                        <button type="submit" class="btn btn-danger  btn-lg btn-block w-100" style="font-family: Nunito; font-weight: 800 margin-top: 10px">Yes</button>
+
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+                    </form>
+
+                    
+                </div>
                 </div>
             </div>
             </div>

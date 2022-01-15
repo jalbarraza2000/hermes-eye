@@ -34,6 +34,24 @@ main {
   transition-property: all;
 }
 
+/* Pended */
+
+.notification-container-pend {
+  background-color: #f7cb73;
+  color: #1b3c65;
+  border-radius: 15px;
+  margin: 5px 25px 0px 25px;
+}
+
+.notification-container-pend:hover {
+  cursor: pointer;
+  background-color: #f7b024;
+
+  transition-duration: 0.5s;
+  transition-timing-function: ease;
+  transition-property: all;
+}
+
 .notification-container:nth-child(1) {
   margin-top: 30px;
 }
@@ -49,7 +67,7 @@ main {
 }
 
 .notification-head {
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 15px;
 }
 
@@ -69,12 +87,12 @@ main {
   color: black;
   font-size: 30px;
   font-weight: bold;
-  padding: 0 20px 10px;
+  padding: 0 20px 0px;
 }
 
 .order-status {
   font-size: 25px;
   color: black;
   font-weight: bold;
-  padding: 5px 20px 0px;
+  padding: 0px 20px 0px;
 }

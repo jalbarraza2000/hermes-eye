@@ -515,23 +515,28 @@ exports.getUpdateUser = (req, res) => {
                             WHERE userID = ${userID};`, (err, row) => {
                         if(err) throw err;
 
-                        console.log("UPDATED");
-                        console.log('Rows affected:', row.affectedRows);
-                    
-                        // res.render("users.hbs", {
-                        //     message:"Updated successful"
-                        // })
-
-                        res.redirect("/users")
+                        db.query("SELECT * FROM users", (err, rows) => {
+                            if(err) throw err;
+                        
+                            res.render("users.hbs", {
+                                message:"Successfully update User ID: " +userID,
+                                users: rows
+                            });
+                        }); 
 
                     });
                 }
                 else{ 
                     //existing user
-                    console.log("UNSUCCESSFULLY UPDATED");
-                    res.render("users.hbs", {
-                        errors:"Error in registering: username already in use"
-                    })                    
+                    // console.log("UNSUCCESSFULLY UPDATED");
+                    db.query("SELECT * FROM users", (err, rows) => {
+                        if(err) throw err;
+                    
+                        res.render("users.hbs", {
+                            errors:"Error in registering: username already in use",
+                            users: rows
+                        });
+                    });                   
                 }
             });
              
