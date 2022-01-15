@@ -206,10 +206,16 @@ exports.getOrders = (req, res)=>{
 
     if(req.session.username){   
 
-        if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
+        if(req.session.isOwner || req.session.isSales){
             db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.status, c.branch, c.contactPersonFName, c.contactPersonLName FROM orders o JOIN clients c ON o.clientID = c.clientID", (err, rows) => {
                 if(err) throw err;
                 res.render('orders', {rows: rows, notifs : req.session.notifs});
+            });
+        }
+        else if(req.session.isLogistics){
+            db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.status, c.branch, c.contactPersonFName, c.contactPersonLName FROM orders o JOIN clients c ON o.clientID = c.clientID", (err, rows) => {
+                if(err) throw err;
+                res.render('orders-logistics.hbs', {rows: rows, notifs : req.session.notifs});
             });
         }
         else{
@@ -367,7 +373,7 @@ exports.postRegister = (req, res)=>{
 exports.getUsers = (req, res)=>{
 
     if(req.session.username){   
-        db.query("SELECT * FROM users", (err, rows) => {
+        db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
             if(err) throw err;
         
             res.render("users.hbs", {users: rows});
@@ -517,7 +523,7 @@ exports.postUpdateUser = (req, res) => {
                             WHERE userID = ${userID};`, (err, row) => {
                         if(err) throw err;
 
-                        db.query("SELECT * FROM users", (err, rows) => {
+                        db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
                             if(err) throw err;
                         
                             res.render("users.hbs", {
@@ -531,7 +537,7 @@ exports.postUpdateUser = (req, res) => {
                 else{ 
                     //existing user
                     // console.log("UNSUCCESSFULLY UPDATED");
-                    db.query("SELECT * FROM users", (err, rows) => {
+                    db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
                         if(err) throw err;
                     
                         res.render("users.hbs", {
@@ -561,7 +567,7 @@ exports.postDeleteUser = (req, res) => {
                 WHERE userID = ${userID};`, (err, row) => {
             if(err) throw err;
 
-            db.query("SELECT * FROM users", (err, rows) => {
+            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
                 if(err) throw err;
             
                 res.render("users.hbs", {

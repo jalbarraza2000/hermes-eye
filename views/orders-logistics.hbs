@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="orders.css">
+        <link rel="stylesheet" type="text/css" href="style1.css">
+        <link href="/css/bootstrap.min.css" rel="stylesheet">
+        <script src="/js/jquery.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+
+        <title>Orders | Hermes Eye</title>
+    </head>
+    <body style="background-color: #d5dfeb">
+        <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
+            <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                <a class="nav-item nav-link" href="home" method="get">Home</a>
+                <a class="nav-item nav-link active" href="orders" method="get">Orders</a>
+                <a class="nav-item nav-link" href="notifications" method="get" style="display: flex;"><span>Notifications</span>
+                    {{#if_greater notifs 0}}
+                        <span class="icon-button-badge">{{notifs}}</span>
+                    {{/if_greater}}
+                            
+                    <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
+                        <span class="material-icons">notifications</span>
+                    </button>
+                </a>
+                <a class="nav-item nav-link" href="profile">Profile</a>
+                </div>
+            </div>
+        </nav>
+
+            <div class="container-sm">
+                <div class="order_header">
+                    <div class="page_information_orders">
+                        <h2 style="font-family: Nunito; font-weight: 800;">Orders</h2>
+                        <h5 style="font-family: Poppins; font-weight: 400;">View your ongoing and completed deliveries</h4>
+                    </div>
+                    {{!-- <div class="create_order">
+                        <button type="button" class="btn btn-primary btn-lg create-order" style="font-family: Nunito; font-weight: 800" href="/create_order">Create Order</button>
+                    </div> --}}
+                </div>
+
+                <div class="table-div">
+                    <table class="content-table">
+                        <thead>
+                            <tr>
+                                <th class="table-header">Order ID</th>
+                                <th class="table-header">Client Branch</th>
+                                <th class="table-header">Contact Person</th>
+                                <th class="table-header">Shipped On</th>
+                                <th class="table-header">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each rows}}
+                            <tr class="table-row view_order" href="/order_details" value={{this.orderID}}>
+                                <td class="table-body">{{this.orderID}}</td>
+                                <td class="table-body">{{this.branch}}</td>
+                                <td class="table-body">{{this.contactPersonFName}} {{this.contactPersonLName}}</td>
+                                <td class="table-body">{{this.shippedOn}}</td>
+                                <td class="table-body">
+                                    {{#ifEquals this.status "For Approval"}}
+                                        <div class="statusChecker-approval">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status "In Transit"}}
+                                        <div class="statusChecker-transit">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status "Delivered"}}
+                                        <div class="statusChecker-delivered">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals this.status "Verified"}}
+                                        <div class="statusChecker-verified">
+                                            {{this.status}}
+                                        </div>
+                                    {{/ifEquals}}
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+    <script>
+        $('.view_order').on('click', function(e) {
+            
+            var href = $(this).attr("href");
+            var newQuery = "/" + $(this).attr("value");
+            var newHref = href + newQuery;
+            
+            window.location.href = newHref;
+        });
+
+        $('.create-order').on('click', function(e) {    
+            window.location.href = $(this).attr("href");;
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </body>
+</html>
