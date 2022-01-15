@@ -289,7 +289,7 @@ exports.getRegistration = (req, res)=>{
     }
 }
 
-exports.getRegister = (req, res)=>{
+exports.postRegister = (req, res)=>{
 
     if(req.session.username){         
         // reading fields from hbs
@@ -483,7 +483,7 @@ exports.postResolveOrder = (req, res) => {
     });
 }
 
-exports.getUpdateUser = (req, res) => {
+exports.postUpdateUser = (req, res) => {
     if(req.session.username){         
         // reading fields from hbs
         let userID = req.body.userID
@@ -544,6 +544,34 @@ exports.getUpdateUser = (req, res) => {
              
                        
         }
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
+
+exports.postDeleteUser = (req, res) => {
+    if(req.session.username){         
+        // reading fields from hbs
+        let userID = req.body.userID
+
+        db.query(`UPDATE users
+                SET status = "Deleted"
+                WHERE userID = ${userID};`, (err, row) => {
+            if(err) throw err;
+
+            db.query("SELECT * FROM users", (err, rows) => {
+                if(err) throw err;
+            
+                res.render("users.hbs", {
+                    message:"Successfully deleted User ID: " +userID,
+                    users: rows
+                });
+            }); 
+
+        });
+        
     }
     else{
         res.redirect("/") 

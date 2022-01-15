@@ -61,20 +61,22 @@
                     </tr>
                     {{#each users}}
                         {{#if_greater userID 0}}
-                        <tr>
-                            <td class="table-body" id="userID{{this.userID}}" value="{{this.userID}}">{{this.userID}}</td>
-                            <td class="table-body" id="username{{this.userID}}">{{this.username}}</td>
-                            <td class="table-body" id="firstname">{{this.firstname}}</td>
-                            <td class="table-body" id="lastname">{{this.lastname}}</td>
-                            <td class="table-body" id="role">{{this.role}}</td>
+                            {{#ifNotEquals status "Deleted"}}
+                            <tr>
+                                <td class="table-body" id="userID{{this.userID}}" value="{{this.userID}}">{{this.userID}}</td>
+                                <td class="table-body" id="username{{this.userID}}">{{this.username}}</td>
+                                <td class="table-body" id="firstname">{{this.firstname}}</td>
+                                <td class="table-body" id="lastname">{{this.lastname}}</td>
+                                <td class="table-body" id="role">{{this.role}}</td>
 
-                            <td class="table-body"><button type="button" class="btn btn-primary view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#view_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Edit</button></td>
+                                <td class="table-body"><button type="button" class="btn btn-primary view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#view_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Edit</button></td>
 
-                            {{#ifNotEquals role "Owner"}}
-                                <td class="table-body"><button type="button" class="btn btn-danger view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#delete_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Delete</button></td>
+                                {{#ifNotEquals role "Owner"}}
+                                    <td class="table-body"><button type="button" class="btn btn-danger view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#delete_modal{{this.userID}}" style="font-family: Nunito; font-weight: 800;">Delete</button></td>
+                                {{/ifNotEquals}}
+                                
+                            </tr>
                             {{/ifNotEquals}}
-                            
-                        </tr>
                     {{/if_greater}}
                     {{/each}}
                 </tbody>
@@ -87,106 +89,105 @@
       <!-- delete modal itself -->
       {{#each users}}
         {{#if_greater userID 0}}
-            <div class="modal fade" id="view_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title">Edit user account</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            {{#ifNotEquals status "Deleted"}}
+                <div class="modal fade" id="view_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title">Edit user account</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
 
-                    <form method="post" action="updateUser">
-                        <div class="form-group">
-                            <input type ="hidden" name="userID" value={{this.userID}}>
-                            <label for="inputUsername{{this.userID}}">Username:</label>
-                            <input type="text" class="form-control" id="inputUsername{{this.userID}}" name="username" placeholder={{this.username}} value={{this.username}} required>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputFname{{this.userID}}">First name:</label>
-                            <input type="text" class="form-control" id="inputFname{{this.userID}}" name="firstname" placeholder={{this.firstname}} value={{this.firstname}} required>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputLname{{this.userID}}">Last name:</label>
-                            <input type="text" class="form-control" id="inputLname{{this.userID}}" name="lastname" placeholder={{this.lastname}} value={{this.lastname}} required>
-                        </div>
-
-
-                        <div class = "form-group col-md-4">
-                            <label for="inputUserRole{{this.userID}}">Choose role  :</label>
-                            <select id="inputUserRole{{this.userID}}" name="role" class="form-control">
-
-                                {{#ifEquals role "Owner"}}
-                                    <option value="Owner" selected>Owner</option>
-                                {{/ifEquals}}
-
-                                {{#ifEquals role "Sales"}}
-                                    <option value="Sales" selected>Sales User</option>
-                                    <option value="Logistics">Logistics User</option>
-                                {{/ifEquals}}
-
-                                {{#ifEquals role "Logistics"}}
-                                    <option value="Sales">Sales User</option>
-                                    <option value="Logistics" selected>Logistics User</option>
-                                {{/ifEquals}}
-
-                                {{#ifEquals role "Client"}}
-                                    <option value="Client" selected>Client User</option>
-                                {{/ifEquals}}
-                                
-                            </select>
-                        </div>
+                        <form method="post" action="updateUser">
+                            <div class="form-group">
+                                <input type ="hidden" name="userID" value={{this.userID}}>
+                                <label for="inputUsername{{this.userID}}">Username:</label>
+                                <input type="text" class="form-control" id="inputUsername{{this.userID}}" name="username" placeholder={{this.username}} value={{this.username}} required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputFname{{this.userID}}">First name:</label>
+                                <input type="text" class="form-control" id="inputFname{{this.userID}}" name="firstname" placeholder={{this.firstname}} value={{this.firstname}} required>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputLname{{this.userID}}">Last name:</label>
+                                <input type="text" class="form-control" id="inputLname{{this.userID}}" name="lastname" placeholder={{this.lastname}} value={{this.lastname}} required>
+                            </div>
 
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
-                    </form>
+                            <div class = "form-group col-md-4">
+                                <label for="inputUserRole{{this.userID}}">Choose role  :</label>
+                                <select id="inputUserRole{{this.userID}}" name="role" class="form-control">
+
+                                    {{#ifEquals role "Owner"}}
+                                        <option value="Owner" selected>Owner</option>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals role "Sales"}}
+                                        <option value="Sales" selected>Sales User</option>
+                                        <option value="Logistics">Logistics User</option>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals role "Logistics"}}
+                                        <option value="Sales">Sales User</option>
+                                        <option value="Logistics" selected>Logistics User</option>
+                                    {{/ifEquals}}
+
+                                    {{#ifEquals role "Client"}}
+                                        <option value="Client" selected>Client User</option>
+                                    {{/ifEquals}}
+                                    
+                                </select>
+                            </div>
 
 
-                    {{!-- <label for="modal-username{{this.userID}}" class="form-label">Username:</label>
-                    <input type="text" class="form-control" id="modal-username{{this.userID}}" placeholder={{this.username}}>
-
-                    <label for="modal-firstname{{this.userID}}" class="form-label">Firstname:</label>
-                    <input type="text" class="form-control" id="modal-firstname{{this.userID}}" placeholder={{this.firstname}}>
-
-                    <label for="modal-lastname{{this.userID}}" class="form-label">Lastname:</label>
-                    <input type="text" class="form-control" id="modal-lastname{{this.userID}}" placeholder={{this.lastname}}> --}}
-
-                </div>
-                {{!-- <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div> --}}
-                </div>
-            </div>
-            </div>
-
-            <div class="modal fade" id="delete_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h5 class="modal-title w-100" id="modal-title">Delete account</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <form method="post" action="updateUser">
-                        <div class="form-group">
-                            <input type ="hidden" name="userID" value={{this.userID}}>
-                        </div>
-
-                        <h4 class="text-center w-100">Are you sure you want to delete <br> {{this.username}} account?</h4>
-                        <button type="submit" class="btn btn-danger  btn-lg btn-block w-100" style="font-family: Nunito; font-weight: 800 margin-top: 10px">Yes</button>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+                        </form>
 
 
-                        <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
-                    </form>
+                        {{!-- <label for="modal-username{{this.userID}}" class="form-label">Username:</label>
+                        <input type="text" class="form-control" id="modal-username{{this.userID}}" placeholder={{this.username}}>
 
-                    
+                        <label for="modal-firstname{{this.userID}}" class="form-label">Firstname:</label>
+                        <input type="text" class="form-control" id="modal-firstname{{this.userID}}" placeholder={{this.firstname}}>
+
+                        <label for="modal-lastname{{this.userID}}" class="form-label">Lastname:</label>
+                        <input type="text" class="form-control" id="modal-lastname{{this.userID}}" placeholder={{this.lastname}}> --}}
+
+                    </div>
+                    {{!-- <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div> --}}
+                    </div>
                 </div>
                 </div>
-            </div>
-            </div>
+
+                <div class="modal fade" id="delete_modal{{this.userID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title w-100" id="modal-title">Delete account</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <form method="post" action="deleteUser">
+                            <div class="form-group">
+                                <input type ="hidden" name="userID" value={{this.userID}}>
+                            </div>
+
+                            <h4 class="text-center w-100">Are you sure you want to delete <br> {{this.username}} account?</h4>
+                            <button type="submit" class="btn btn-danger  btn-lg btn-block w-100" style="font-family: Nunito; font-weight: 800 margin-top: 10px">Yes</button>
+                        </form>
+
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            {{/ifNotEquals}}
         {{/if_greater}}
       {{/each}}
         
