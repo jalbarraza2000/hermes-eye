@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <link rel="stylesheet" href="orders.css">
+    <link rel="stylesheet" href="create_order.css">
     <link rel="stylesheet" href="style1.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/jquery.js"></script>
+    <script src="/create_order.js"></script>
     <script src="/js/bootstrap.min.js"></script>
 
     <title>Create Order | Hermes Eye</title>
 </head>
-<body>
+<body style="background-color: #d5dfeb">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
         <a class="navbar-brand" href="/"><img class="navbar-logo" src="/img/HermesEye icon.png"></img></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
@@ -38,58 +39,58 @@
 
     <div class="container-sm">
         <div class="form-header">
-            <div class="page-information-orders">
-                <h2 style="font-family: Nunito; font-weight: 800;">Create Order</h2>
-                <h5 style="font-family: Poppins; font-weight: 400;">Input a requested order</h4>
-            </div>
+
         </div>
 
         <div class="form-body">
-            <div class="clients-table">
-                <h3 style="font-family: Nunito; font-weight: 800;">Registered Clients</h3>
-                <table style="font-family: Nunito; text-align: center;">
-                    <tbody>
-                        <tr>
-                            <th class="table-header">Client ID</th>
-                            <th class="table-header">Client Branch</th>
-                            <th class="table-header">Contact Person</th>
-                            <th class="table-header">Contact Number</th>
-                        </tr>
-                        {{#each rows}}
-                        <tr>
-                            <td class="table-body">{{this.clientID}}</td>
-                            <td class="table-body">{{this.branch}}</td>
-                            <td class="table-body">{{this.contactPersonFName}} {{this.contactPersonLName}}</td>
-                            <td class="table-body">{{this.contactNum}}</td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-
             <div class="order-form">
                 <h3 style="font-family: Nunito; font-weight: 800;">Order Form</h3>
-                <form action="/add-order" method="POST">
-                    <label>Order ID</label>
-                    <input type="text" name="orderID" required>
-                    <br><br>
+                <h5 style="font-family: Poppins; font-weight: 400; margin-bottom: 30px;">Input a requested order</h4>
+                <form autocomplete="off" class="form-proper" action="/add-order" method="POST">
+                    <div class="input-groupForm">
+                        <label>Order ID</label>
+                        <input type="text" name="orderID" placeholder="12345678" required>
+                    </div>
 
-                    <label>Client ID</label>
-                    <input type="text" name="clientID" required>
-                    <br><br>
+                    <div class="input-groupForm autocomplete">
+                        <label>Client Branch</label>
+                        <input type="text" id="clientBranch" name="clientBranch" placeholder="Robinsons Otis" required>        
+                    </div>
 
-                    <label>Shipped Via</label>
-                    <input type="text" name="shippedVia" required>
-                    <br><br>
+                    <div class="input-groupForm">
+                        <label>Shipped Via</label>
+                        <input type="text" name="shippedVia" required>
+                    </div>
 
-                    <label>Business Style</label>
-                    <input type="text" name="businessStyle" required>
-                    <br><br>
+                    <div class="input-groupForm">
+                        <label>Business Style</label>
+                        <input type="text" name="businessStyle" required>
+                    </div>
 
                     <button class="btn btn-primary" type ="submit">Submit</button>
                 </form>
             </div>
         </div>
     </div>
+
+<script>
+
+    window.onload = init();
+
+    function init() {
+        var completeArray = {{{rows}}};
+        var branches = [];
+
+        for(i = 0; i < completeArray.length; i++) {
+            branches.push(completeArray[i].branch);
+        }
+        
+        autocomplete(document.getElementById("clientBranch"), branches);
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 </html>

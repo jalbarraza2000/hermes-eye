@@ -35,20 +35,6 @@
   background:#ffffff;
 }
 
-.form-header{
-  display: flex;
-  flex-direction: row;
-  margin-top: 60px;
-  margin-bottom: 20px;
-  justify-content: space-between;
-}
-
-.form-body{
-  display:flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 .content-table {
   font-family: Nunito; 
   text-align: center; 

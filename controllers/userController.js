@@ -418,20 +418,22 @@ exports.getOrderDetails = (req, res) => {
 }
 
 exports.getCreateOrder = (req, res) => {
-    db.query("SELECT * FROM clients", (err, rows) => {
+    db.query("SELECT c.branch FROM clients c;", (err, rows) => {
         if(err) throw err;
     
-        res.render('create_order', {rows: rows});
+        res.render('create_order', {rows: JSON.stringify(rows)});
      });
 }
 
 exports.postCreateOrder = (req, res) => {
-    db.query('INSERT INTO orders (orderID, clientID, shippedVia, businessStyle, status) VALUES(?,?,?,?,?)', [req.body.orderID, req.body.clientID, req.body.shippedVia, req.body.businessStyle, 'For Approval'], function(err) {
-        if (err) {
-          return console.log(err.message);
-        }
-        res.redirect('/orders');
-      });
+    db.query('SELECT clientID FROM clients WHERE branch = ?', req.body.clientBranch, (err, result) => {
+        db.query('INSERT INTO orders (orderID, clientID, shippedVia, businessStyle, status) VALUES(?,?,?,?,?)', [req.body.orderID, result[0].clientID, req.body.shippedVia, req.body.businessStyle, 'For Approval'], function(err) {
+            if (err) {
+              return console.log(err.message);
+            }
+            res.redirect('/orders');
+          });
+    });
 }
 
 exports.postApprovalOrder = (req, res) => {
