@@ -23,7 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 exports.getIndex = (req, res)=>{    
 
     if(req.session.username){
-        db.query(`SELECT SUM(readStatus) AS notifs FROM adminNotif WHERE username = '${req.session.username}' `, (err, row) => {
+        db.query(`SELECT SUM(readStatus+readPendStatus) AS notifs FROM adminNotif WHERE username = '${req.session.username}' `, (err, row) => {
             if(err) throw err;
             
             req.session.notifs = row[0].notifs;
@@ -237,10 +237,11 @@ let data = [false, 1];
 exports.getNotifications = (req, res)=>{
 
     if(req.session.username){   
-        db.query(`SELECT orderID, status, readStatus 
+        db.query(`SELECT orderID, status, readStatus, pendStatus, readPendStatus  
                         FROM hermes_eye.adminNotif
                         WHERE username="${req.session.username}"
-                        AND readStatus <> 0
+                        AND (readStatus <> 0
+                        OR readPendStatus <> 0)
                         ORDER BY notifID DESC;`, (err, rows) => {
             if(err) throw err;
             
@@ -249,7 +250,7 @@ exports.getNotifications = (req, res)=>{
             if(!req.session.notifications.isEmpty){
             // execute the UPDATE statement
             db.query(`UPDATE hermes_eye.adminNotif
-                            SET readStatus = 0
+                            SET readStatus = 0, readPendStatus = 0
                             WHERE username="${req.session.username}";`, data, (error, results, fields) => {
                 if (error){
                     return console.error(error.message);
@@ -390,7 +391,10 @@ exports.getProfile = (req, res)=>{
                
         if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
             res.render("profile.hbs", {
-                notifs : req.session.notifs
+                notifs : req.session.notifs,
+                username: req.session.username,
+                firstname: req.session.firstname,
+                lastname: req.session.lastname
             })
         }
         else if(req.session.isAdmin){

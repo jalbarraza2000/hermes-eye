@@ -47,6 +47,57 @@
 
         {{#each notifications}}
 
+          {{!-- RESOLVED NOTIFICATION --}}
+          {{#ifEquals pendStatus "Resolved"}}
+            {{#ifEquals readPendStatus 2}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">task</span>
+                        <div class="order-status">Status: {{pendStatus}}</div>
+                      </div>
+                </a>
+              </div>
+
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">pending_actions</span>
+                        <div class="order-status">Status: Pended</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+
+            {{#ifEquals readPendStatus 1}}
+              <div class="notification-container" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons">task</span>
+                        <div class="order-status">Status: {{pendStatus}}</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+          {{/ifEquals}}
+
+          {{#ifEquals pendStatus "Pending"}}
+            {{#ifEquals readPendStatus 1}}
+              <div class="notification-container-pend" value={{orderID}}>
+                <a class="notification-link" value={{orderID}}>
+                    <div  class="notification-head">                     
+                        <div class="order-number">Order Number : {{orderID}}</div>   
+                          <span class="material-icons" style="color: black">pending_actions</span>
+                        <div class="order-status">Status: Pended</div>
+                      </div>
+                </a>
+              </div>
+            {{/ifEquals}}
+          {{/ifEquals}}
+
           {{!-- DELIVERED NOTIFICATION --}}
           {{#ifEquals status "Delivered"}}
             {{#ifEquals readStatus 3}}

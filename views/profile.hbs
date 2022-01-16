@@ -12,7 +12,7 @@
 
     <title>Profile | Hermes Eye</title>
 </head>
-<body>
+<body style="background-color: #d5dfeb">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
           <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
@@ -37,12 +37,35 @@
       </nav>
       
       <main>
-        <div id="title_header"><h1>Profile</h1></div>
-        <div class="header-banner"> 
-          <h1>Hello Owner !</h1>
+
+        <div class="container-sm">
+            <div class="jumbotron jumbotron-fluid" style="margin-top: 50px;">
+                <div class="container">
+                    <h1 class="display-4" style="font-family: Nunito; font-weight: 800;">My Profile</h1>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="profile-container">
+                <div class = "accountInfo">
+                    <div class="accountInfo-header">
+                        <h1 style="font-family: Nunito; font-weight: 800;">ACCOUNT INFORMATION</h1>
+                    </div>
+
+                    <div class="accountInfo-body"> 
+                        <h2 class="display-7" style="font-family: Poppins; font-weight: 400;">{{username}}</h2>
+                        <h2 class="display-7" style="font-family: Poppins; font-weight: 400;">{{firstname}} {{lastname}}</h2>
+                        
+                    </div>                
+                </div>
+            </div>
+
+            <a href="signout" id="signout" method="get">Sign out</a>
+
+
         </div>
 
-         <a href="signout" id="signout" method="get">Sign out</a>
       </main>
       
       <!-- partial -->
