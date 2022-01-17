@@ -136,6 +136,7 @@ exports.getLogin = async (req,res)=>{
                 req.session.username = username
                 req.session.firstname = dbFname
                 req.session.lastname = dbLname
+                req.session.role = dbRole
                 
                 if(dbRole == "Owner"){
                     req.session.isOwner = true
@@ -394,7 +395,8 @@ exports.getProfile = (req, res)=>{
                 notifs : req.session.notifs,
                 username: req.session.username,
                 firstname: req.session.firstname,
-                lastname: req.session.lastname
+                lastname: req.session.lastname,
+                role: req.session.role
             })
         }
         else if(req.session.isAdmin){
@@ -517,10 +519,10 @@ exports.postUpdateUser = (req, res) => {
             });
         }
         else{
-            db.query(`SELECT username FROM users WHERE username = "${username}";`, function(err, result){
+            db.query(`SELECT userID FROM users WHERE username = "${username}";`, function(err, result){
                 if(err) throw err;
                 
-                if(result.length < 1){ //empty result, no match username
+                if(result.length < 1){ //empty result, no match username, can update to a new username                   
                     //update user to db
                     db.query(`UPDATE users
                             SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
@@ -535,21 +537,42 @@ exports.postUpdateUser = (req, res) => {
                                 users: rows
                             });
                         }); 
+                    });    
+                }
+                else if(result.length == 1) { //match userID, have user in DB
 
-                    });
-                }
-                else{ 
-                    //existing user
-                    // console.log("UNSUCCESSFULLY UPDATED");
-                    db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
-                        if(err) throw err;
-                    
-                        res.render("users.hbs", {
-                            errors:"Error in registering: username already in use",
-                            users: rows
+                    if(result[0].userID == userID){ //same user that is and trying to update data
+                        //update user to db
+                        db.query(`UPDATE users
+                                SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
+                                WHERE userID = ${userID};`, (err, row) => {
+                            if(err) throw err;
+
+                            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                if(err) throw err;
+                            
+                                res.render("users.hbs", {
+                                    message:"Successfully update User ID: " +userID,
+                                    users: rows
+                                });
+                            }); 
                         });
-                    });                   
+                    }
+                    else{ //existing user
+                        // console.log("UNSUCCESSFULLY UPDATED");
+                        db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                            if(err) throw err;
+                        
+                            res.render("users.hbs", {
+                                errors:"Error in registering: username already in use",
+                                users: rows
+                            });
+                        });   
+                    }
                 }
+                // else{ 
+                                    
+                // }
             });
              
                        
