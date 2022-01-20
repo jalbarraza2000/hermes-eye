@@ -60,7 +60,7 @@
                         </thead>
                         <tbody>
                             {{#each rows}}
-                            <tr class="table-row view_order" href="/order_details" value={{this.orderID}}>
+                            <tr class="table-row" href="/order_details" value={{this.orderID}}>
                                 <td class="table-body">{{this.orderID}}</td>
                                 <td class="table-body">{{this.branch}}</td>
                                 <td class="table-body">{{this.contactPersonFName}} {{this.contactPersonLName}}</td>
@@ -98,6 +98,7 @@
             </div>
 
     <script>
+        /*
         $('.view_order').on('click', function(e) {
             
             var href = $(this).attr("href");
@@ -110,6 +111,7 @@
         $('.create-order').on('click', function(e) {    
             window.location.href = $(this).attr("href");;
         });
+        */
     </script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
