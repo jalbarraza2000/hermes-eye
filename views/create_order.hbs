@@ -45,10 +45,11 @@
             <div class="order-form">
                 <h3 style="font-family: Nunito; font-weight: 800;">Order Form</h3>
                 <h5 style="font-family: Poppins; font-weight: 400; margin-bottom: 30px;">Input a requested order</h4>
-                <form autocomplete="off" class="form-proper" action="/add-order" method="POST">
+                <form autocomplete="off" class="form-proper" id="order_form" action="/add-order" method="POST" onsubmit="return idInvalidation()">
                     <div class="input-groupForm">
                         <label>Order ID</label>
-                        <input type="text" name="orderID" placeholder="12345678" required>
+                        <input type="text" id="orderID" name="orderID" placeholder="12345678" required>
+                        <p id="invalidation-text" style="color: red; display:none;"></p>
                     </div>
 
                     <div class="input-groupForm autocomplete">
@@ -85,6 +86,37 @@
         }
         
         autocomplete(document.getElementById("clientBranch"), branches);
+    }
+
+    function noSubmit() {
+        $('order_form').submit(function(e) {
+            e.preventDefault();
+        });
+    }
+
+    function idInvalidation() {
+        var orderIDs = {{{orders}}};
+        var idLength = orderIDs.length;
+        var x = document.getElementById("orderID").value;
+        var flag = 0;
+        var text;
+
+        for(i = 0; i < idLength; i++){
+            if(x == orderIDs[i].orderID) {
+                flag = 1;
+            }
+        }
+
+        if(flag == 1){
+            text = 'Order ID exists. Please try again.';
+            document.getElementById("invalidation-text").style.display = "contents";
+            document.getElementById("invalidation-text").innerHTML = text;
+            return false;
+        }
+        else {
+            document.getElementById("invalidation-text").style.display = "none";
+            return true;
+        }
     }
 </script>
 

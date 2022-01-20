@@ -432,13 +432,18 @@ exports.getOrderDetails = (req, res) => {
 exports.getCreateOrder = (req, res) => {
     db.query("SELECT c.branch FROM clients c;", (err, rows) => {
         if(err) throw err;
-    
-        res.render('create_order', {rows: JSON.stringify(rows)});
+        db.query("SELECT o.orderID FROM orders o;", (err, orders) => {
+            if(err) throw err;
+
+            res.render('create_order', {rows: JSON.stringify(rows), orders: JSON.stringify(orders)});
+        })
+        
      });
 }
 
 exports.postCreateOrder = (req, res) => {
     db.query('SELECT clientID FROM clients WHERE branch = ?', req.body.clientBranch, (err, result) => {
+        if(err) throw err;
         db.query('INSERT INTO orders (orderID, clientID, shippedVia, businessStyle, status) VALUES(?,?,?,?,?)', [req.body.orderID, result[0].clientID, req.body.shippedVia, req.body.businessStyle, 'For Approval'], function(err) {
             if (err) {
               return console.log(err.message);
