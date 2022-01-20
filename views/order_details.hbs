@@ -29,8 +29,20 @@
 
           var longLat = {{{result}}};
           var length = longLat.length;
-          console.log(length)
           if(length > 0) {
+
+            var j = 0;
+
+            try {
+              while(longLat[j].longitude == 0 && longLat[j].latitude == 0) {
+                j++;
+              }
+            }
+            catch(err){
+              $( ".truck-map" ).remove();
+              $( ".refresh-button" ).remove();
+            }
+
             var map = new ol.Map({
                 target: 'map',
                 layers: [
@@ -39,7 +51,7 @@
                 })
                 ],
                 view: new ol.View({
-                center: ol.proj.fromLonLat([longLat[0].longitude, longLat[0].latitude]),
+                center: ol.proj.fromLonLat([longLat[j].longitude, longLat[j].latitude]),
                 zoom: 18
                 })
             });
@@ -67,15 +79,18 @@
             });
             map.addLayer(currentIcon);
             map.addLayer(previousIcon);
-            var marker = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[0].longitude, longLat[0].latitude])));
+
+            var marker = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[j].longitude, longLat[j].latitude])));
             currentIcon.getSource().addFeature(marker);
 
-            for(let i = 1; i < length; i++) {
-              var marker1 = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[i].longitude, longLat[i].latitude])));
-              previousIcon.getSource().addFeature(marker1);
+            for(let i = j+1; i < length; i++) {
+              if(longLat[i].longitude > 0 && longLat[i].latitude > 0) {
+                var marker1 = new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat([longLat[i].longitude, longLat[i].latitude])));
+                previousIcon.getSource().addFeature(marker1);
+              }
             }
             
-            var dt1 = new Date(longLat[0].loggedOn.replace('T', ' ').replace('Z', ''))
+            var dt1 = new Date(longLat[j].loggedOn.replace('T', ' ').replace('Z', ''))
             dt1.addHours(8)
             $( ".lastLoggedTime" ).text("- Last Location Time at " + dt1.toString());
           }
@@ -186,6 +201,28 @@
           <td class="table-body"><button type="button" id="resolve-button" class="btn btn-warning resolve_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#resolveModal">Resolve</button></td>
           <td class="table-body"><button type="button" id="complete-button" class="btn btn-success complete_order" value={{orderID}} style="font-family: Nunito; font-weight: 800;" data-toggle="modal" data-target="#completeModal">Verified</button></td>
         </div>
+
+      <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Location Error Logs</h5>
+      <div class="location-error-list">
+        <table style="font-family: Nunito;">
+          <tbody>
+            <tr>
+              <th class="table-header">Logged On</th>
+            </tr>
+            {{#each errorLoc}}
+              {{#ifEquals this.longitude "0"}}
+              <tr>
+                <td class="table-body">{{this.loggedOn}}</td>
+              </tr>
+              {{/ifEquals}}
+            {{else}}
+            <tr>
+              <td class="table-body">No Information to Display Yet</td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
 
       <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Product Information</h5>
       <div class="deliveryItems-list">

@@ -420,7 +420,7 @@ exports.getOrderDetails = (req, res) => {
           if(err) throw err;
           db.query("SELECT * FROM deliveryItems WHERE orderID = ?", req.params.orderID, (err, rows) => {
             if(err) throw err;
-            res.render('order_details', {result: JSON.stringify(result), rows:rows, orderID: orderDetails[0].orderID, plateNum: orderDetails[0].plateNum, 
+            res.render('order_details', {result: JSON.stringify(result), errorLoc: result, rows:rows, orderID: orderDetails[0].orderID, plateNum: orderDetails[0].plateNum, 
               branch: orderDetails[0].branch, contactPerson: orderDetails[0].contactPersonFName + " " + orderDetails[0].contactPersonLName, status: orderDetails[0].status, 
               shippedVia: orderDetails[0].shippedVia, businessStyle: orderDetails[0].businessStyle, approvedBy: orderDetails[0].approvedBy, receivedBy: orderDetails[0].receivedBy, 
               shippedOn: orderDetails[0].shippedOn, completedOn: orderDetails[0].completedOn, issueStatus: orderDetails[0].issueStatus});
