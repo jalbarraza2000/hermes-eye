@@ -21,5 +21,7 @@ routes.post("/resolve-order", userController.postResolveOrder)
 routes.post("/updateUser", userController.postUpdateUser)
 routes.post("/deleteUser", userController.postDeleteUser)
 routes.get("/signout", userController.getSignout)
+routes.get("/average_branch", userController.getAllAverageBranch)
+routes.get("/pending_orders", userController.getPendingOrders)
 
 module.exports = routes

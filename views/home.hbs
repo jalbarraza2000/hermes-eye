@@ -85,7 +85,7 @@
         <div class="pending-container container">
           <div class="pending-headerText">
                 <h3 style="font-family: Nunito; margin-bottom: 20px; font-weight: 800;">Pending Orders</h3>
-                <button class="btn btn-primary">
+                <button id="pendingOrders-viewAll" href="/pending_orders" class="btn btn-primary" style="height: 50%;">
                     <span style="font-family: Nunito; font-weight: 800;">View All</span>
                 </button>
           </div>
@@ -128,7 +128,7 @@
                 <div class="perBranch">
                     <div class="perBranch-header">
                         <h5 style="font-weight: 400;">Average Delivery Time Per Branch</h5>
-                        <button class="btn btn-primary">
+                        <button id="deliveryTime-viewAll" href="/average_branch" class="btn btn-primary">
                             <span style="font-weight: 800;">View All</span>
                         </button>
                     </div>
@@ -155,6 +155,14 @@
             var newHref = href + newQuery;
             
             window.location.href = newHref;
+        });
+
+        $("#deliveryTime-viewAll").on('click', function(e) {
+            window.location.href = $(this).attr("href");
+        });
+
+        $("#pendingOrders-viewAll").on('click', function(e) {
+            window.location.href = $(this).attr("href");
         });
     </script>
     <!-- partial -->

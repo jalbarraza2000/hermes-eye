@@ -500,6 +500,33 @@ exports.postResolveOrder = (req, res) => {
     });
 }
 
+exports.getAllAverageBranch = (req, res) => {
+    db.query("SELECT COUNT(*) AS deliveredOrders, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL;", (err, avgTime) => {
+        if(err) throw err;
+
+        db.query("SELECT c.branch, c.contactPersonFName, c.contactPersonLName, c.contactNum, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY avgtimediff;", (err, result) => {
+            if (err) throw err;
+             
+            res.render("average_branch", {
+                numOrders: avgTime[0].deliveredOrders,
+                avgTime: avgTime[0].avgtimediff,
+                avgBranch: result,
+                firstBranch: result[0].avgtimediff
+            })
+        });
+    });
+}
+
+exports.getPendingOrders = (req, res) => {
+    db.query("SELECT * FROM issues", (err, result) => {
+        if(err) throw err;
+
+        res.render("pending_orders", {
+            result: result
+        })
+    });
+}
+
 exports.postUpdateUser = (req, res) => {
     if(req.session.username){         
         // reading fields from hbs

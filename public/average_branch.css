@@ -1,0 +1,36 @@
+.header-information {
+    display:flex;
+    justify-content: space-between;
+    margin-top: 70px;
+}
+
+.header-box {
+    background: #f7f7f7;
+    padding: 40px;
+    border-radius: 5px;
+    font-family: Nunito;
+}
+
+.averageBranch {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    background: #f7f7f7;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+}
+
+.branch-header, .branch-body {
+    font-family: Nunito;
+    padding: 12px 15px;
+    border-bottom: 1px solid #dddddd;
+}
+
+th {
+    font-size: 1.4rem;
+}
+
+.timeTable {
+    padding: 20px;
+}
