@@ -67,25 +67,86 @@ exports.getIndex = (req, res)=>{
                 });
             }
             else if(req.session.isAdmin){
-                res.render("home-admin.hbs", {
-                    firstname: req.session.firstname,
-                    lastname: req.session.lastname,
-                    notifs : req.session.notifs
-                })
+                db.query("SELECT u.username, u.firstname, u.lastname, u.role FROM users u WHERE u.status = 'Active' AND u.userID > 0;", (err, activeUsers) => {
+                    if (err) throw err;
+
+                    res.render("home-admin.hbs", {
+                        firstname: req.session.firstname,
+                        lastname: req.session.lastname,
+                        notifs : req.session.notifs,
+                        activeUsers: activeUsers
+                    })
+                });
             }
             else if(req.session.isSales){
-                res.render("home-sales.hbs", {
-                    firstname: req.session.firstname,
-                    lastname: req.session.lastname,
-                    notifs : req.session.notifs
-                })
+                db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'For Approval' LIMIT 3;", (err, forApprove) => {
+                    if(err) throw err;
+
+                    db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'In Transit' ORDER BY o.shippedOn DESC LIMIT 3;", (err, inTransit) => {
+                        if (err) throw err;
+
+                        db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'Delivered' ORDER BY o.completedOn DESC LIMIT 3;", (err, delivered) => {
+                            if (err) throw err;
+
+                            db.query("SELECT c.branch, c.contactNum FROM clients c", (err, clients) => {
+                                if(err) throw err;
+
+                                db.query("SELECT p.brand, p.modelNum, p.unitPrice FROM products p", (err, products) => {
+                                    if (err) throw err;
+
+                                    res.render("home-sales.hbs", {
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        notifs : req.session.notifs,
+                                        forApprove: forApprove,
+                                        inTransit : inTransit,
+                                        delivered : delivered,
+                                        clients: clients,
+                                        products: products
+                                    })
+                                });
+                            });
+                        });
+                    });
+                });
             }
             else if(req.session.isLogistics){
-                res.render("home-logistics.hbs", {
-                    firstname: req.session.firstname,
-                    lastname: req.session.lastname,
-                    notifs : req.session.notifs
-                })
+                db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'For Approval' LIMIT 3;", (err, forApprove) => {
+                    if(err) throw err;
+
+                    db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'In Transit' ORDER BY o.shippedOn DESC LIMIT 3;", (err, inTransit) => {
+                        if (err) throw err;
+
+                        db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'Delivered' ORDER BY o.completedOn DESC LIMIT 3;", (err, delivered) => {
+                            if (err) throw err;
+
+                            db.query("SELECT COUNT(*) AS deliveredOrders, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL;", (err, avgTime) => {
+                                if(err) throw err;
+
+                                db.query("SELECT c.branch, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
+                                    if (err) throw err;
+
+                                    db.query("SELECT * FROM issues LIMIT 5;", (err, issues) => {
+                                        if (err) throw err;
+                                        
+                                        res.render("home-logistics.hbs", {
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            notifs : req.session.notifs,
+                                            forApprove: forApprove,
+                                            inTransit : inTransit,
+                                            delivered : delivered,
+                                            avgTime: avgTime[0].avgtimediff,
+                                            compOrders: avgTime[0].deliveredOrders,
+                                            result: result,
+                                            issues: issues
+                                        })
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             }
             else{
                 res.render("home-client.hbs", {
@@ -448,7 +509,20 @@ exports.postCreateOrder = (req, res) => {
             if (err) {
               return console.log(err.message);
             }
-            res.redirect('/orders');
+
+            db.query("SELECT username FROM users WHERE role IN ('Owner', 'Sales', 'Logistics');", (err, inserts) => {
+                if (err) throw err;
+
+                for(let i = 0; i < inserts.length; i++) {
+                    db.query("INSERT INTO adminNotif (orderID, username, status, readStatus) VALUES (?,?,?,?)", [req.body.orderID, inserts[i].username, 'For Approval', 1], function(err) {
+                        if (err) {
+                            return console.log(err.message);
+                          }
+                    })
+                } 
+
+                res.redirect('/orders');
+            });
           });
     });
 }
@@ -458,7 +532,14 @@ exports.postApprovalOrder = (req, res) => {
         if (err) {
           return console.log(err.message);
         }
-        res.redirect('back');
+
+        db.query("UPDATE adminNotif SET readStatus = readStatus + 1, status = ? WHERE orderID = ?", ['In Transit', parseInt(req.body.orderID)], function(err) {
+            if (err) {
+                return console.log(err.message);
+              }
+              
+            res.redirect('back');
+        });
     });
 }
 
@@ -467,7 +548,13 @@ exports.postCompleteOrder = (req, res) => {
         if (err) {
           return console.log(err.message);
         }
-        res.redirect('back');
+        db.query("UPDATE adminNotif SET readStatus = readStatus + 1, status = ? WHERE orderID = ?", ['Verified', parseInt(req.body.orderID)], function(err) {
+            if (err) {
+                return console.log(err.message);
+              }
+              
+            res.redirect('back');
+        });
     });
 }
 
@@ -481,7 +568,14 @@ exports.postPendingOrder = (req, res) => {
             if (err) {
                 return console.log(err.message);
             }
-            res.redirect('back');
+
+            db.query("UPDATE adminNotif SET readPendStatus = readPendStatus + 1, pendStatus = ? WHERE orderID = ?", ['Pending', parseInt(req.body.orderID)], function(err) {
+                if (err) {
+                    return console.log(err.message);
+                  }
+                  
+                res.redirect('back');
+            });
         });
     });
 }
@@ -495,7 +589,14 @@ exports.postResolveOrder = (req, res) => {
             if (err) {
                 return console.log(err.message);
               }
-            res.redirect('back');
+
+              db.query("UPDATE adminNotif SET readPendStatus = readPendStatus + 1, pendStatus = ? WHERE orderID = ?", ['Resolved', parseInt(req.body.orderID)], function(err) {
+                if (err) {
+                    return console.log(err.message);
+                  }
+                  
+                res.redirect('back');
+            });
         });
     });
 }

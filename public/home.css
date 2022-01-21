@@ -195,3 +195,82 @@ th {
   display: flex;
   justify-content: space-between;
 }
+
+.clients-product {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.clients-table {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background: #f7f7f7;
+  border-radius: 5px;
+  width: 49%;
+  height: 475px;
+  overflow: auto;
+}
+
+.clients-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 3px;
+}
+
+.clients-header {
+  font-family: Nunito;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.clients-body {
+  font-family: Nunito;
+  font-weight: 800;
+}
+
+.row-design {
+  padding: 20px;
+  display: flex;
+  background: #ECE3FC;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.user-table {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background: #f7f7f7;
+  border-radius: 5px;
+  margin-bottom: 50px;
+}
+
+.user-rowDesign {
+  padding: 20px;
+  display: flex;
+  background: #DDF2FD;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.user-details {
+  display: flex;
+  justify-content: space-between;
+  width: 40%;
+  margin-top: 3px;
+  align-items: center;
+}
+
+.user-header {
+  font-family: Nunito;
+  font-weight: 800;
+}
+
+.user-body {
+  font-family: Nunito;
+  font-weight: 400;
+}

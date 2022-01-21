@@ -12,43 +12,111 @@
 
     <title>Home | Hermes Eye</title>
 </head>
-<body>
-      <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
-          <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
-              <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav">
-              <a class="nav-item nav-link active" href="home" method="get">Home</a>
-              <a class="nav-item nav-link" href="orders" method="get">Orders</a>
-              <a class="nav-item nav-link" href="notifications" method="get" style="display: flex;"><span>Notifications</span>
-                  {{#if_greater notifs 0}}
-                      <span class="icon-button-badge">{{notifs}}</span>
-                  {{/if_greater}}
+<body style="background-color: #d5dfeb">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
+        <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="home" method="get">Home</a>
+            <a class="nav-item nav-link" href="orders" method="get">Orders</a>
+            <a class="nav-item nav-link" href="notifications" method="get" style="display: flex;"><span>Notifications</span>
+                {{#if_greater notifs 0}}
+                    <span class="icon-button-badge">{{notifs}}</span>
+                {{/if_greater}}
                           
-                  <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
-                      <span class="material-icons">notifications</span>
-                  </button>
-              </a>
-              <a class="nav-item nav-link" href="profile">Profile</a>
-              </div>
-          </div>
-      </nav>
-      
-      <main>
-        <div class="home-banner">
-            <h1 class="banner">WELCOME SALES!<br>{{firstname}} {{lastname}}</h1>
+                <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
+                    <span class="material-icons">notifications</span>
+                </button>
+            </a>
+            <a class="nav-item nav-link" href="profile">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-sm">
+        <div class="jumbotron jumbotron-fluid" style="margin-top: 50px;">
+            <div class="container">
+                <h1 class="display-4" style="font-family: Nunito; font-weight: 800;">Welcome Back!</h1>
+                <p class="lead" style="font-family: Poppins; font-weight: 400;">Review data about your clients here.</p>
+            </div>
         </div>
 
+        <hr>
 
-      </main>
-      
-      <!-- partial -->
-      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-      <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script><script  src="./home.js"></script> -->
+        <div class="dashboard-container container">
+            <div class="orderBox">
+                <div class="orderBox-header">
+                    <h5 style="font-weight: 800;">For Approval</h5>
+                </div>
+                {{#each forApprove}}
+                    <div class="orderBrief orderBox-content-approve" value="{{this.orderID}}">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">bookmark</span>
+                        <h7 class="branchText">{{this.branch}}</h7>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="orderBox">
+                <div class="orderBox-header">
+                    <h5 style="font-weight: 800;">In Transit</h5>
+                </div>
+                {{#each inTransit}}
+                    <div class="orderBrief orderBox-content-transit" value="{{this.orderID}}">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">local_shipping</span>
+                        <h7 class="branchText">{{this.branch}}</h7>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="orderBox">
+                <div class="orderBox-header">
+                    <h5 style="font-weight: 800;">Delivered</h5>
+                </div>
+                {{#each delivered}}
+                    <div class="orderBrief orderBox-content-deliver" value="{{this.orderID}}">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">check_box</span>
+                        <h7 class="branchText">{{this.branch}}</h7>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="clients-product">
+            <div class="clients-table">
+                <h3 class="clients-header">Client Branches</h3>
+                {{#each clients}}
+                    <div class="row-design">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">account_circle</span>
+                        <div class="clients-row">
+                            <h7 class="clients-body">{{this.branch}}</h7>
+                            <h7 class="clients-body">{{this.contactNum}}</h7>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            
+            <div class="clients-table">
+                <h3 class="clients-header">Products</h3>
+                {{#each products}}
+                    <div class="row-design">
+                        <span class="material-icons" style="font-size: 30px; margin-right: 20px;">local_mall</span>
+                        <div class="clients-row">
+                            <h7 class="clients-body">{{this.brand}} {{this.modelNum}}</h7>
+                            <h7 class="clients-body">{{this.unitPrice}}</h7>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- partial -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script><script  src="./home.js"></script> -->
 
 </body>
 </html>

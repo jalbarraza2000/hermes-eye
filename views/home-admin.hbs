@@ -12,7 +12,7 @@
 
     <title>Home | Hermes Eye</title>
 </head>
-<body>
+<body style="background-color: #d5dfeb">
       <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
           <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
@@ -28,13 +28,32 @@
           </div>
       </nav>
       
-      <main>
-        <div class="home-banner">
-            <h1 class="banner">WELCOME ADMIN<br>{{firstname}} {{lastname}}</h1>
+      <div class="container-sm">
+        <div class="jumbotron jumbotron-fluid" style="margin-top: 50px;">
+                <div class="container">
+                    <h1 class="display-4" style="font-family: Nunito; font-weight: 800;">Welcome Back!</h1>
+                    <p class="lead" style="font-family: Poppins; font-weight: 400;">Review data about users here.</p>
+                </div>
         </div>
 
+        <hr>
 
-      </main>
+          <h2 class="user-header" style="margin-top: 30px; padding-left: 10px;">Active Users</h2>
+          <div class="user-table">
+            {{#each activeUsers}}
+                <div class="user-rowDesign">
+                    <span class="material-icons" style="font-size: 60px; margin-right: 20px;">account_circle</span>
+                        <div class="user-details">
+                            <div class="name-box">
+                                <h4 class="user-header">{{this.firstname}} {{this.lastname}}</h4>
+                                <h6 class="user-body">{{this.username}}</h6>
+                            </div>
+                            <h5 class="user-header">{{this.role}}</h5>
+                        </div> 
+                </div>
+            {{/each}}
+          </div>
+      </div>
       
       <!-- partial -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
