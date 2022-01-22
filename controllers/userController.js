@@ -268,7 +268,7 @@ exports.getOrders = (req, res)=>{
 
     if(req.session.username){   
 
-        if(req.session.isOwner || req.session.isSales){
+        if(req.session.isOwner){
             db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.status, c.branch, c.contactPersonFName, c.contactPersonLName FROM orders o JOIN clients c ON o.clientID = c.clientID", (err, rows) => {
                 if(err) throw err;
                 res.render('orders', {rows: rows, notifs : req.session.notifs});
@@ -278,6 +278,12 @@ exports.getOrders = (req, res)=>{
             db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.status, c.branch, c.contactPersonFName, c.contactPersonLName FROM orders o JOIN clients c ON o.clientID = c.clientID", (err, rows) => {
                 if(err) throw err;
                 res.render('orders-logistics.hbs', {rows: rows, notifs : req.session.notifs});
+            });
+        }
+        else if(req.session.isSales) {
+            db.query("SELECT o.orderID, o.clientID, o.shippedOn, o.status, c.branch, c.contactPersonFName, c.contactPersonLName FROM orders o JOIN clients c ON o.clientID = c.clientID", (err, rows) => {
+                if(err) throw err;
+                res.render('orders-sales', {rows: rows, notifs : req.session.notifs});
             });
         }
         else{

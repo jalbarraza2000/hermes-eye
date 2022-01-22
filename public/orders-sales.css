@@ -1,0 +1,80 @@
+#title_header {
+    color: #1b3c65;
+    text-transform: uppercase;
+  }
+  
+  .order_header {
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+  }
+  
+  .page_information_orders {
+    display:flex;
+    flex-direction: column;
+  }
+  
+  .table-div{
+    /* border: 2px solid grey; */
+    border-radius: 5px;
+    overflow-x:auto;
+  }
+  
+  .table-header{
+    /* border-bottom: 2px solid grey; */
+    padding: 12px 15px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dddddd;
+  }
+  
+  .table-body{
+    padding: 12px 15px;
+    border-bottom: 1px solid #dddddd;
+    background:#ffffff;
+  }
+  
+  .content-table {
+    font-family: Nunito; 
+    text-align: center; 
+    width: 100%;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .content-table tbody tr:last-of-type {
+    border-bottom: 2px solid #12adff;
+  }
+  
+  .statusChecker-approval {
+    padding: 8px;
+    background: #DDF2FD;
+    border-radius: 5px;
+    font-family: Nunito;
+    font-weight: 800;
+  }
+  
+  .statusChecker-transit {
+    padding: 8px;
+    background: #FAF8DF;
+    border-radius: 5px;
+    font-family: Nunito;
+    font-weight: 800;
+  }
+  
+  .statusChecker-delivered {
+    padding: 8px;
+    background: #FCEBF6;
+    border-radius: 5px;
+    font-family: Nunito;
+    font-weight: 800;
+  }
+  
+  .statusChecker-verified {
+    padding: 8px;
+    background: #E8FBE1;
+    border-radius: 5px;
+    font-family: Nunito;
+    font-weight: 800;
+  }
