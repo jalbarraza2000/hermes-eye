@@ -520,7 +520,7 @@ exports.postCreateOrder = (req, res) => {
                 if (err) throw err;
 
                 for(let i = 0; i < inserts.length; i++) {
-                    db.query("INSERT INTO adminNotif (orderID, username, status, readStatus) VALUES (?,?,?,?)", [req.body.orderID, inserts[i].username, 'For Approval', 1], function(err) {
+                    db.query("INSERT INTO adminNotif (orderID, username, status, readStatus, readPendStatus) VALUES (?,?,?,?,0)", [req.body.orderID, inserts[i].username, 'For Approval', 1], function(err) {
                         if (err) {
                             return console.log(err.message);
                           }
