@@ -1,0 +1,12 @@
+#title_header {
+  color: #1b3c65;
+  text-transform: uppercase;
+}
+
+.order_header {
+  display: flex;
+  flex-direction: row;
+  margin-top: 60px;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
