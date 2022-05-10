@@ -299,6 +299,19 @@ exports.getOrders = (req, res)=>{
 
 }
 
+exports.getRFID = (req, res)=>{
+
+    if(req.session.username){   
+        res.render("rfid.hbs", {
+            // notifs : req.session.notifs
+        })
+    }
+    else{
+        res.redirect("/") 
+    }
+
+}
+
 // update notification status
 let data = [false, 1];
 
@@ -327,8 +340,14 @@ exports.getNotifications = (req, res)=>{
                 // console.log('Rows affected:', results.affectedRows);
                 req.session.notifs = 0;
 
-                if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
+                if(req.session.isOwner || req.session.isSales){
                     res.render("notifications.hbs", {
+                        notifs : req.session.notifs,
+                        notifications: req.session.notifications
+                    })
+                }
+                else if(req.session.isLogistics){
+                    res.render("notifications-logistics.hbs", {
                         notifs : req.session.notifs,
                         notifications: req.session.notifications
                     })
@@ -457,13 +476,21 @@ exports.getProfile = (req, res)=>{
 
     if(req.session.username){   
                
-        if(req.session.isOwner || req.session.isSales || req.session.isLogistics){
+        if(req.session.isOwner || req.session.isSales){
             res.render("profile.hbs", {
                 notifs : req.session.notifs,
                 username: req.session.username,
                 firstname: req.session.firstname,
                 lastname: req.session.lastname,
                 role: req.session.role
+            })
+        }
+        else if(req.session.isLogistics){
+            res.render("profile-logistics.hbs", {
+                notifs : req.session.notifs,
+                username: req.session.username,
+                firstname: req.session.firstname,
+                lastname: req.session.lastname,
             })
         }
         else if(req.session.isAdmin){
