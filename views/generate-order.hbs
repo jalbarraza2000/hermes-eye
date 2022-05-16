@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- <meta http-equiv="Refresh" content="10">  -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/order_details.css">
+    <link rel="stylesheet" href="/style1.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+    <title>Generate Order Report | Hermes Eye</title>
+  </head>
+  <body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
+        <a class="navbar-brand" href="/"><img class="navbar-logo" src="/img/HermesEye icon.png"></img></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/home" method="get">Home</a>
+            <a class="nav-item nav-link active" href="/orders" method="get">Orders</a>
+            <a class="nav-item nav-link" href="/notifications" method="get" style="display: flex;"><span>Notifications</span>
+                {{#if_greater notifs 0}}
+                    <span class="icon-button-badge">{{notifs}}</span>
+                {{/if_greater}}
+                            
+                <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
+                    <span class="material-icons">notifications</span>
+                </button>
+            </a>
+            <a class="nav-item nav-link" href="/profile">Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-sm">
+        <button type="button" onclick="HTMLtoPDF()" id="download-button" value = {{orderID}} class="btn btn-secondary" style="font-family: Nunito; font-weight: 800; margin-right: 20px; margin-top: 50px;">Download PDF Report</button>
+    </div>
+
+    <div class="container-sm" id="capture">
+      <h2 style="font-family: Nunito; font-weight: 800; margin-top: 50px; margin-bottom: 10px;">Order {{orderID}}</h2>
+      <div class="orderInformation">
+        <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Order Information</h5>
+        <div class="orderDetailsBox">
+          
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Branch</h6>
+            <h6 class="infoContent">{{branch}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Contact Person</h6>
+            <h6 class="infoContent">{{contactPerson}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle" id="orderStatus" value="{{status}}">Order Status</h6>
+            <h6 class="infoContent">{{status}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle" id="issueStatus" value="{{issueStatus}}">Issue Status</h6>
+            <h6 class="infoContent">{{issueStatus}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Shipped Via</h6>
+            <h6 class="infoContent">{{shippedVia}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Business Style</h6>
+            <h6 class="infoContent">{{businessStyle}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Approved By</h6>
+            <h6 class="infoContent">{{approvedBy}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Received By</h6>
+            <h6 class="infoContent">{{receivedBy}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Delivery On</h6>
+            <h6 class="infoContent">{{shippedOn}}</h6>
+          </div>
+
+          <div class="orderInformationBox">
+            <h6 class="infoTitle">Delivery Completed</h6>
+            <h6 class="infoContent">{{completedOn}}</h6>
+          </div>
+        </div>
+      </div>
+
+      <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Product Information</h5>
+
+    <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Loaded Products</h5>
+        <div class="order-details-table" style="margin-bottom: 30px;">
+              <table style="font-family: Nunito; text-align: center; width:100%;">
+                  <tbody>
+                      <tr>
+                          <th class="table-header">Unique ID</th>
+                          <th class="table-header">Product ID</th>
+                          <th class="table-header">Status</th>
+                          <th class="table-header">Date and Time</th>
+                      </tr>
+                      {{#each rows}}
+                        {{#ifEquals this.status "Loaded"}}
+                        <tr>
+                            <td class="table-body">{{this.uniqueCode}}</td>
+                            <td class="table-body">{{this.productID}}</td>
+                            <td class="table-body">{{this.status}}</td>
+                            <td class="table-body">{{this.dateTime}}</td>
+                        </tr>
+                        {{/ifEquals}}
+                      {{else}}
+                        <tr>
+                          <td class="table-body">No Information to Display Yet</td>
+                        </tr>
+                      {{/each}}
+                  </tbody>
+              </table>
+        </div>
+
+    <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Unloaded Products</h5>
+        <div class="order-details-table" style="margin-bottom: 30px;">
+                <table style="font-family: Nunito; text-align: center; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <th class="table-header">Unique ID</th>
+                            <th class="table-header">Product ID</th>
+                            <th class="table-header">Status</th>
+                            <th class="table-header">Date and Time</th>
+                        </tr>
+                        {{#each rows}}
+                          {{#ifEquals this.status "Unloaded"}}
+                          <tr>
+                              <td class="table-body">{{this.uniqueCode}}</td>
+                              <td class="table-body">{{this.productID}}</td>
+                              <td class="table-body">{{this.status}}</td>
+                              <td class="table-body">{{this.dateTime}}</td>
+                          </tr>
+                          {{/ifEquals}}
+                        {{else}}
+                        <tr>
+                          <td class="table-body">No Information to Display Yet</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+        </div>
+    <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Verified Products</h5>
+        <div class="order-details-table" style="margin-bottom: 30px;">
+                <table style="font-family: Nunito; text-align: center; width: 100%;">
+                    <tbody>
+                        <tr>
+                            <th class="table-header">Unique ID</th>
+                            <th class="table-header">Product ID</th>
+                            <th class="table-header">Status</th>
+                            <th class="table-header">Date and Time</th>
+                        </tr>
+                        {{#each rows}}
+                          {{#ifEquals this.status "Verified"}}
+                          <tr>
+                              <td class="table-body">{{this.uniqueCode}}</td>
+                              <td class="table-body">{{this.productID}}</td>
+                              <td class="table-body">{{this.status}}</td>
+                              <td class="table-body">{{this.dateTime}}</td>
+                          </tr>
+                          {{/ifEquals}}
+                        {{else}}
+                        <tr>
+                          <td class="table-body">No Information to Display Yet</td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+        </div>
+      </div>
+
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+        window.html2canvas = html2canvas;
+
+        function generateDate(){
+            var currentTime = new Date();                
+            var date = currentTime.getFullYear()+'-'+(currentTime.getMonth()+1)+'-'+currentTime.getDate();
+            var time = currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds();
+            var dateTime = date+' '+time;
+            $('#dateApproved').val(dateTime)
+        }
+
+        function HTMLtoPDF() {
+
+            var orderID = $("#download-button").attr("value");
+        
+            html2canvas(document.querySelector("#capture"), {
+
+                allowTaint:true,
+                useCORS: true,
+                scale: 1
+            }).then(canvas => {
+                
+                var img = canvas.toDataURL("image/png");
+                var doc = new jsPDF();
+                doc.addImage(img, "PNG", 7, 13, 195, 220);
+                doc.save("Order Report");
+            });
+            
+            
+
+            
+        }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

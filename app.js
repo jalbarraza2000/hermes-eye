@@ -6,6 +6,7 @@ const bodyparser = require("body-parser")
 const cookieparser = require("cookie-parser")
 const hbs = require("hbs")
 const { runInNewContext } = require("vm")
+const { jsPDF } = require("jspdf")
 
 const userRoute = require('./routes/userRoute')
 const clientRoute = require('./routes/clientRoute')

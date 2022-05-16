@@ -199,7 +199,8 @@
           <td class="table-body"><button type="button" id="approve-button" class="btn btn-primary approve_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#approveModal">Approve</button></td>
           <td class="table-body"><button type="button" id="pending-button" class="btn btn-warning pend_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#pendingModal">Pending</button></td>
           <td class="table-body"><button type="button" id="resolve-button" class="btn btn-warning resolve_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#resolveModal">Resolve</button></td>
-          <td class="table-body"><button type="button" id="complete-button" class="btn btn-success complete_order" value={{orderID}} style="font-family: Nunito; font-weight: 800;" data-toggle="modal" data-target="#completeModal">Verified</button></td>
+          <td class="table-body"><button type="button" id="complete-button" class="btn btn-success complete_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;" data-toggle="modal" data-target="#completeModal">Verified</button></td>
+          <td class="table-body"><button type="button" id="generate-button" href="/generate-order" class="btn btn-info complete_order" value={{orderID}} style="font-family: Nunito; font-weight: 800; margin-right: 20px;">Generate Order Report</button></td>
         </div>
 
       <h5 style="font-family: Nunito; font-weight: 800; margin-top: 20px; margin-bottom: 30px;">Location Error Logs</h5>
@@ -478,6 +479,15 @@
 
         $('.resolve_order').on('click', function(e) {    
             $('#orderID_input4').val($(this).attr("value"));
+        });
+
+        $('#generate-button').on('click', function(e) {
+            
+            var href = $(this).attr("href");
+            var newQuery = "/" + $(this).attr("value");
+            var newHref = href + newQuery;
+            
+            window.location.href = newHref;
         });
 
         $( document ).ready(function() {
