@@ -348,8 +348,19 @@
                 <input type="text" name="approvedBy" required>
                 <br><br>
 
-                <label>Truck Plate Number to Deliver</label>
-                <input type="text" name="plateNum" required>
+                {{!-- <label>Truck Plate Number to Deliver</label>
+                <input type="text" name="plateNum" required> --}}
+
+                <div class = "dropdownPlateNum">
+                  <label for="inputPlateNum">Truck Plate Number to Deliver  :</label>
+                  <select id="inputPlateNum" name="plateNum" required>
+                    {{#each plateNums}}
+                      <option value="{{plateNum}}" selected>{{plateNum}}</option>
+                    {{/each}}
+                    
+                  </select>
+                </div>
+
                 <br><br>
 
                 <input type="hidden" name="dateApproved" id="dateApproved">

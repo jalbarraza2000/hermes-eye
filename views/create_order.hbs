@@ -57,15 +57,31 @@
                         <input type="text" id="clientBranch" name="clientBranch" placeholder="Robinsons Otis" required>        
                     </div>
 
-                    <div class="input-groupForm">
+                    {{!-- <div class="input-groupForm">
                         <label>Shipped Via</label>
                         <input type="text" name="shippedVia" required>
-                    </div>
-
-                    <div class="input-groupForm">
+                    </div> 
+                    
+                     <div class="input-groupForm">
                         <label>Business Style</label>
                         <input type="text" name="businessStyle" required>
+                    </div> --}}
+
+                    <div class = "dropdown" style="margin-bottom: 20px">
+                        <label for="inputOrderShippedVia">Shipped Via  :</label>
+                        <select id="inputOrderShippedVia" name="shippedVia" required>
+                            <option value="Truck" selected>Truck</option>
+                            {{!-- <option value="Ship">Ship</option> --}}
+                        </select>
                     </div>
+
+                    <div class = "dropdown" style="margin-bottom: 20px">
+                        <label for="inputBusinessStlye">Business Style   :</label>
+                        <select id="inputBusinessStlye" name="businessStyle" required>
+                            <option value="Mall" selected>Mall</option>
+                        </select>
+                    </div>
+
 
                     <button class="btn btn-primary" type ="submit">Submit</button>
                 </form>
