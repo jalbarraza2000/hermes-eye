@@ -38,27 +38,34 @@ exports.getIndex = (req, res)=>{
                         db.query("SELECT o.orderID, c.branch FROM orders o JOIN clients c ON o.clientID = c.clientID WHERE status = 'Delivered' ORDER BY o.completedOn DESC LIMIT 3;", (err, delivered) => {
                             if (err) throw err;
 
-                            db.query("SELECT COUNT(*) AS deliveredOrders, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL;", (err, avgTime) => {
+                            db.query("SELECT COUNT(*) AS deliveredOrders, TIME_FORMAT(SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))), '%H:%i:%s') AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL;", (err, avgTime) => {
                                 if(err) throw err;
 
-                                db.query("SELECT c.branch, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
+                                db.query("SELECT c.branch, TIME_FORMAT(SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))), '%H:%i:%s') AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
                                     if (err) throw err;
 
                                     db.query("SELECT * FROM issues LIMIT 5;", (err, issues) => {
                                         if (err) throw err;
                                         
-                                        res.render("home.hbs", {
-                                            firstname: req.session.firstname,
-                                            lastname: req.session.lastname,
-                                            notifs : req.session.notifs,
-                                            forApprove: forApprove,
-                                            inTransit : inTransit,
-                                            delivered : delivered,
-                                            avgTime: avgTime[0].avgtimediff,
-                                            compOrders: avgTime[0].deliveredOrders,
-                                            result: result,
-                                            issues: issues
-                                        })
+                                        db.query("SELECT COUNT(*) AS monthlyOrders FROM orders o WHERE MONTH(completedOn) = MONTH(CURRENT_DATE) AND completedOn IS NOT NULL;", (err, monthlyDelivery) => {
+                                            if (err) throw err;
+                                            
+                                            res.render("home.hbs", {
+                                                firstname: req.session.firstname,
+                                                lastname: req.session.lastname,
+                                                notifs : req.session.notifs,
+                                                forApprove: forApprove,
+                                                inTransit : inTransit,
+                                                delivered : delivered,
+                                                avgTime: avgTime[0].avgtimediff,
+                                                compOrders: avgTime[0].deliveredOrders,
+                                                result: result,
+                                                issues: issues,
+                                                monthly: monthlyDelivery[0].monthlyOrders
+                                            })
+                                            
+                                        });
+        
                                     });
                                 });
                             });
@@ -66,6 +73,8 @@ exports.getIndex = (req, res)=>{
                     });
                 });
             }
+
+
             else if(req.session.isAdmin){
                 db.query("SELECT u.username, u.firstname, u.lastname, u.role FROM users u WHERE u.status = 'Active' AND u.userID > 0;", (err, activeUsers) => {
                     if (err) throw err;

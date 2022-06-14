@@ -89,6 +89,10 @@ tr:hover td {
   background-color: transparent; /* or #000 */
 }
 
+.table-header::after {
+  content: "\25b4";
+}
+
 .content-table .th-sort-asc::after {
   content: "\25b4";
 

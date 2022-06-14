@@ -19,20 +19,23 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                <a class="nav-item nav-link" href="home" method="get">Home</a>
-                <a class="nav-item nav-link active" href="orders" method="get">Orders</a>
-                <a class="nav-item nav-link" href="notifications" method="get" style="display: flex;"><span>Notifications</span>
-                    {{#if_greater notifs 0}}
-                        <span class="icon-button-badge">{{notifs}}</span>
-                    {{/if_greater}}
-                            
-                    <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
-                        <span class="material-icons">notifications</span>
-                    </button>
-                </a>
-                <a class="nav-item nav-link" href="profile">Profile</a>
+                <div class="navbar-nav me-auto">
+                    <a class="nav-item nav-link" href="home" method="get">Home</a>
+                    <a class="nav-item nav-link active" href="orders" method="get">Orders</a>
+                    <a class="nav-item nav-link" href="notifications" method="get" style="display: flex;"><span>Notifications</span>
+                        {{#if_greater notifs 0}}
+                            <span class="icon-button-badge">{{notifs}}</span>
+                        {{/if_greater}}
+                                
+                        <button type="button" class="icon-button" style="border-radius: 100px; position: relative; z-index: -1; top: -5px;">
+                            <span class="material-icons">notifications</span>
+                        </button>
+                    </a>
+                    <a class="nav-item nav-link" href="profile">Profile</a>
                 </div>
+            <div class="navbar-nav" style="margin-right: 30px;">
+                <a href="signout" id="signout" method="get" style="margin-left: 0px; color: white;">Sign out</a>
+            </div>
             </div>
         </nav>
 
