@@ -10,6 +10,16 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/jquery.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script>
+      function myFunction() {
+        var x = document.getElementById("inputPassword");
+        if (x.type === "password") {
+          x.type = "text";
+        } else {
+          x.type = "password";
+        }
+      }
+    </script>
     <style>
             .error{
                 height: auto;
@@ -58,7 +68,7 @@
     <main>
       <div id="title_header"><h1>Registration</h1></div>
   
-      <img src="img/HermesEye BannerSky.png" id="logo">
+      <img src="img/HermesEye BannerWhite.png" id="logo">
       
       <div class="box">
 
@@ -79,7 +89,14 @@
             <input class="input-field" type="text" name="firstname" placeholder="First name" required> <br>
             <input class="input-field" type="text" name="lastname" placeholder="Last name" required> <br>
             <input class="input-field" type="text" name="un" placeholder="Username" required> <br>
-            <input class="input-field" type="password" name="pw" placeholder="Password" required minlength="8"> <br>
+            <input class="input-field" type="password" name="pw" placeholder="Password" id="inputPassword" required minlength="8"> <br>
+
+            <!-- An element to toggle between password visibility -->
+            <div>
+              <label><input type="checkbox" onclick="myFunction()" /> Show Password</label>
+            </div>
+
+            <input class="input-field" type="password" name="c_pw" placeholder="Confirm Password" required minlength="8"> <br>
 
             <div class = "dropdownUser">
               <label for="inputUserRole">Choose role  :</label>
