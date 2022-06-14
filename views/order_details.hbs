@@ -343,13 +343,9 @@
             <div class="modal-body">
               <form action="/approve-order" id="approve-form" method="POST">
 
-                <label>Order ID</label>
-                <input type="text" id="orderID_input1" name="orderID" readonly>
-                <br><br>
+                <input type="text" id="orderID_input1" name="orderID" style="display: none;" readonly>
 
-                <label>Approved By</label>
-                <input type="text" name="approvedBy" required>
-                <br><br>
+                <input type="text" id="approvedBy_name" name="approvedBy" value={{userName}} style="display: none;" readonly>
 
                 {{!-- <label>Truck Plate Number to Deliver</label>
                 <input type="text" name="plateNum" required> --}}
@@ -363,8 +359,6 @@
                     
                   </select>
                 </div>
-
-                <br><br>
 
                 <input type="hidden" name="dateApproved" id="dateApproved">
               </form>

@@ -41,7 +41,7 @@ exports.getIndex = (req, res)=>{
                             db.query("SELECT COUNT(*) AS deliveredOrders, TIME_FORMAT(SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))), '%H:%i:%s') AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL;", (err, avgTime) => {
                                 if(err) throw err;
 
-                                db.query("SELECT c.branch, TIME_FORMAT(SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))), '%H:%i:%s') AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
+                                db.query("SELECT c.branch, TIME_FORMAT(SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))), '%H:%i:%s') AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 7;", (err, result) => {
                                     if (err) throw err;
 
                                     db.query("SELECT * FROM issues LIMIT 5;", (err, issues) => {
@@ -49,23 +49,31 @@ exports.getIndex = (req, res)=>{
                                         
                                         db.query("SELECT COUNT(*) AS monthlyOrders FROM orders o WHERE MONTH(completedOn) = MONTH(CURRENT_DATE) AND completedOn IS NOT NULL;", (err, monthlyDelivery) => {
                                             if (err) throw err;
-                                            
-                                            res.render("home.hbs", {
-                                                firstname: req.session.firstname,
-                                                lastname: req.session.lastname,
-                                                notifs : req.session.notifs,
-                                                forApprove: forApprove,
-                                                inTransit : inTransit,
-                                                delivered : delivered,
-                                                avgTime: avgTime[0].avgtimediff,
-                                                compOrders: avgTime[0].deliveredOrders,
-                                                result: result,
-                                                issues: issues,
-                                                monthly: monthlyDelivery[0].monthlyOrders
-                                            })
-                                            
+
+                                            db.query("SELECT COUNT(*) AS num FROM issues WHERE status = 'On Going';", (err, ongoing) => {
+                                                if (err) throw err;
+                                                
+                                                db.query("SELECT COUNT(*) AS num FROM issues WHERE status = 'Resolved';", (err, resolved) => {
+                                                    if (err) throw err;
+                                                    res.render("home.hbs", {
+                                                        firstname: req.session.firstname,
+                                                        lastname: req.session.lastname,
+                                                        notifs : req.session.notifs,
+                                                        forApprove: forApprove,
+                                                        inTransit : inTransit,
+                                                        delivered : delivered,
+                                                        avgTime: avgTime[0].avgtimediff,
+                                                        compOrders: avgTime[0].deliveredOrders,
+                                                        result: result,
+                                                        issues: issues,
+                                                        monthly: monthlyDelivery[0].monthlyOrders,
+                                                        resolved: resolved[0].num,
+                                                        ongoing: ongoing[0].num,
+                                                        totalIssues: resolved[0].num + ongoing[0].num
+                                                    }) 
+                                                });
+                                            });
                                         });
-        
                                     });
                                 });
                             });
@@ -135,7 +143,7 @@ exports.getIndex = (req, res)=>{
                                 db.query("SELECT c.branch, SEC_TO_TIME(AVG(TIME_TO_SEC(TIMEDIFF(o.completedOn, o.shippedOn)))) AS avgtimediff FROM hermes_eye.orders o JOIN hermes_eye.clients c ON o.clientID = c.clientID WHERE shippedOn IS NOT NULL AND completedOn IS NOT NULL GROUP BY c.branch ORDER BY c.branch LIMIT 5;", (err, result) => {
                                     if (err) throw err;
 
-                                    db.query("SELECT * FROM issues LIMIT 5;", (err, issues) => {
+                                    db.query("SELECT * FROM issues", (err, issues) => {
                                         if (err) throw err;
                                         
                                         res.render("home-logistics.hbs", {
@@ -530,7 +538,7 @@ exports.getOrderDetails = (req, res) => {
                 branch: orderDetails[0].branch, contactPerson: orderDetails[0].contactPersonFName + " " + orderDetails[0].contactPersonLName, status: orderDetails[0].status, 
                 shippedVia: orderDetails[0].shippedVia, businessStyle: orderDetails[0].businessStyle, approvedBy: orderDetails[0].approvedBy, receivedBy: orderDetails[0].receivedBy, 
                 shippedOn: orderDetails[0].shippedOn, completedOn: orderDetails[0].completedOn, issueStatus: orderDetails[0].issueStatus,
-                plateNums: plateNums});
+                plateNums: plateNums, userName: req.session.username});
             });
          });
         });

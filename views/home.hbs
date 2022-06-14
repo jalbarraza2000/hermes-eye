@@ -88,31 +88,64 @@
 
         <div class="pending-container container">
           <div class="pending-headerText">
-                <h3 style="font-family: Nunito; margin-bottom: 20px; font-weight: 800;">Pending Orders</h3>
+                <h3 style="font-family: Nunito; margin-bottom: 20px; font-weight: 800;">Pending Orders ({{totalIssues}})</h3>
                 <button id="pendingOrders-viewAll" href="/pending_orders" class="btn btn-primary" style="height: 50%;">
                     <span style="font-family: Nunito; font-weight: 800;">View All</span>
                 </button>
           </div>
           <div class="pendingOrders">
-              <table class="pendingTable">
-                  <tbody>
-                      <tr>
-                          <th class="pending-header">Order ID</th>
-                          <th class="pending-header">Status</th>
-                          <th class="pending-header">Justification</th>
-                          <th class="pending-header">Resolution</th>
-                      </tr>
 
-                      {{#each issues}}
-                      <tr>
-                          <td class="pending-body">{{this.orderID}}</td>
-                          <td class="pending-body smallBox">{{this.status}}</td>
-                          <td class="pending-body bigBox">{{this.justification}}</td>
-                          <td class="pending-body bigBox">{{this.resolution}}</td>
-                      </tr>
-                      {{/each}}
-                  </tbody>
-              </table>
+            <ul class="nav nav-pills" id="myTab" role="tablist" style="margin-bottom: 20px;">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="ongoing-tab" data-bs-toggle="tab" data-bs-target="#ongoing" type="button" role="tab" aria-controls="ongoing" aria-selected="true">On Going ({{ongoing}})</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="resolved-tab" data-bs-toggle="tab" data-bs-target="#resolved" type="button" role="tab" aria-controls="resolved" aria-selected="false">Resolved ({{resolved}})</button>
+                </li>
+            </ul>
+
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="ongoing" role="tabpanel" aria-labelledby="ongoing-tab">
+                            <table class="pendingTable">
+                                <tbody>
+                                    <tr>
+                                        <th class="pending-header">Order ID</th>
+                                        <th class="pending-header">Justification</th>
+                                    </tr>
+
+                                    {{#each issues}}
+                                        {{#ifEquals this.status "On Going"}}
+                                        <tr>
+                                            <td class="pending-body">{{this.orderID}}</td>
+                                            <td class="pending-body bigBox">{{this.justification}}</td>
+                                        </tr>
+                                        {{/ifEquals}}
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="resolved" role="tabpanel" aria-labelledby="resolved-tab">
+                            <table class="pendingTable">
+                                <tbody>
+                                    <tr>
+                                        <th class="pending-header">Order ID</th>
+                                        <th class="pending-header">Justification</th>
+                                        <th class="pending-header">Resolution</th>
+                                    </tr>
+
+                                    {{#each issues}}
+                                        {{#ifEquals this.status "Resolved"}}
+                                        <tr>
+                                            <td class="pending-body">{{this.orderID}}</td>
+                                            <td class="pending-body bigBox">{{this.justification}}</td>
+                                            <td class="pending-body bigBox">{{this.resolution}}</td>
+                                        </tr>
+                                        {{/ifEquals}}
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
           </div>  
         </div>
 
