@@ -187,12 +187,12 @@
 
           <div class="orderInformationBox">
             <h6 class="infoTitle">Delivery On</h6>
-            <h6 class="infoContent">{{shippedOn}}</h6>
+            <h6 class="infoContent">{{formatTimeDate shippedOn}}</h6>
           </div>
 
           <div class="orderInformationBox">
             <h6 class="infoTitle">Delivery Completed</h6>
-            <h6 class="infoContent">{{completedOn}}</h6>
+            <h6 class="infoContent">{{formatTimeDate completedOn}}</h6>
           </div>
         </div>
       </div>
@@ -216,7 +216,7 @@
             {{#each errorLoc}}
               {{#ifEquals this.longitude "0"}}
               <tr>
-                <td class="table-body">{{this.loggedOn}}</td>
+                <td class="table-body">{{formatTimeDate this.loggedOn}}</td>
               </tr>
               {{/ifEquals}}
             {{else}}
@@ -259,7 +259,7 @@
                             <td class="table-body">{{this.uniqueCode}}</td>
                             <td class="table-body">{{this.productID}}</td>
                             <td class="table-body">{{this.status}}</td>
-                            <td class="table-body">{{this.dateTime}}</td>
+                            <td class="table-body">{{formatTimeDate this.dateTime}}</td>
                         </tr>
                         {{/ifEquals}}
                       {{else}}
@@ -287,7 +287,7 @@
                               <td class="table-body">{{this.uniqueCode}}</td>
                               <td class="table-body">{{this.productID}}</td>
                               <td class="table-body">{{this.status}}</td>
-                              <td class="table-body">{{this.dateTime}}</td>
+                              <td class="table-body">{{formatTimeDate this.dateTime}}</td>
                           </tr>
                           {{/ifEquals}}
                         {{else}}
@@ -315,7 +315,7 @@
                               <td class="table-body">{{this.uniqueCode}}</td>
                               <td class="table-body">{{this.productID}}</td>
                               <td class="table-body">{{this.status}}</td>
-                              <td class="table-body">{{this.dateTime}}</td>
+                              <td class="table-body">{{formatTimeDate this.dateTime}}</td>
                           </tr>
                           {{/ifEquals}}
                         {{else}}

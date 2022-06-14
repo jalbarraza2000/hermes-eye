@@ -7,6 +7,7 @@ const cookieparser = require("cookie-parser")
 const hbs = require("hbs")
 const { runInNewContext } = require("vm")
 const { jsPDF } = require("jspdf")
+const moment = require('moment');
 
 const userRoute = require('./routes/userRoute')
 const clientRoute = require('./routes/clientRoute')
@@ -35,6 +36,26 @@ hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
 
 hbs.registerHelper('ifNotEquals', function(arg1, arg2, options) {
     return (arg1 != arg2) ? options.fn(this) : options.inverse(this);
+});
+
+hbs.registerHelper('formatTime', function (date) {
+    var mmnt = moment(date);
+    var toReturn = mmnt.format('L');
+    if (toReturn === "Invalid date") {
+        toReturn = "";
+    }
+        
+    return toReturn;
+});
+
+hbs.registerHelper('formatTimeDate', function (date) {
+    var mmnt = moment(date);
+    var toReturn = mmnt.format('LLL');
+    if (toReturn === "Invalid date") {
+        toReturn = "";
+    }
+        
+    return toReturn;
 });
 
 app.use(bodyparser.urlencoded({
