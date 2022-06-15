@@ -406,6 +406,7 @@ exports.postRegister = (req, res)=>{
         // reading fields from hbs
         let username = req.body.un
         let password = req.body.pw
+        let confirm_password = req.body.c_pw
         let first_name = req.body.firstname
         let last_name = req.body.lastname
         let role = req.body.role
@@ -414,15 +415,30 @@ exports.postRegister = (req, res)=>{
         body("username").notEmpty();
         body("password").notEmpty();
         body("password").isLength({min:8});
+        body("confirm_password").notEmpty();
+        body("confirm_password").isLength({min:8});       
         body("first_name").notEmpty();
         body("last_name").notEmpty();
-        body("role").notEmpty();    
+        body("role").notEmpty();
+
+        // if(confirm_password == password){
+        //     console.log("SAME");
+        // }
+        // else{
+        //     console.log("NOT SAME");
+        // }
 
         //check errors
         const errors = validationResult(req);
         if(!errors.isEmpty()){
             res.render("registration.hbs", {
                 errors:errors,
+                notifs : req.session.notifs
+            });
+        }
+        else if(confirm_password != password){
+            res.render("registration.hbs", {
+                errors:"Error in registering: incorrect password",
                 notifs : req.session.notifs
             });
         }
@@ -444,8 +460,8 @@ exports.postRegister = (req, res)=>{
                     
                     if(result.length < 1){ //empty result, no match username
                     //new user logic
-                    db.query(`INSERT INTO hermes_eye.users (userID, username, password, firstname, lastname, role)
-                                        VALUES (${newID}, "${username}", "${password}", "${first_name}", "${last_name}", "${role}");`, (err, row) => {
+                    db.query(`INSERT INTO hermes_eye.users (userID, username, password, firstname, lastname, role, status)
+                                        VALUES (${newID}, "${username}", "${password}", "${first_name}", "${last_name}", "${role}", "Active");`, (err, row) => {
                             if(err) throw err;
             
                             console.log("SUCCESSFULLY REGISTERED UID: " +newID);
@@ -481,7 +497,10 @@ exports.getUsers = (req, res)=>{
         db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
             if(err) throw err;
         
-            res.render("users.hbs", {users: rows});
+            res.render("users.hbs", {
+                users: rows,
+                userRole: req.session.role,
+                notifs : req.session.notifs});
          });
     }
     else{
@@ -704,20 +723,46 @@ exports.postUpdateUser = (req, res) => {
         let username = req.body.username
         let first_name = req.body.firstname
         let last_name = req.body.lastname
+        let new_password = req.body.new_password
+        let confirm_new_password = req.body.confirm_new_password
         let role = req.body.role
 
         //checking if valid
         body("username").notEmpty();
         body("first_name").notEmpty();
         body("last_name").notEmpty();
+        // body("new_password").notEmpty();
+        body("new_password").isLength({min:8}); 
+        // body("confirm_new_password").notEmpty();
+        body("confirm_new_password").isLength({min:8}); 
         body("role").notEmpty();    
 
         //check errors
         const errors = validationResult(req);
         if(!errors.isEmpty()){
             console.log("IS EMPTY");
-            res.render("users.hbs", {
-                errors:errors
+
+            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                if(err) throw err;
+            
+                res.render("users.hbs", {
+                    errors:errors,
+                    users: rows,
+                    userRole: req.session.role,
+                    notifs : req.session.notifs
+                });
+            });
+        }
+        else if(new_password != confirm_new_password){ //If not same new pass and confirmation pass
+            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                if(err) throw err;
+            
+                res.render("users.hbs", {
+                    errors:"Error in updating account: incorrect password confirmation",
+                    users: rows,
+                    userRole: req.session.role,
+                    notifs : req.session.notifs
+                });
             });
         }
         else{
@@ -725,29 +770,16 @@ exports.postUpdateUser = (req, res) => {
                 if(err) throw err;
                 
                 if(result.length < 1){ //empty result, no match username, can update to a new username                   
-                    //update user to db
-                    db.query(`UPDATE users
-                            SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
-                            WHERE userID = ${userID};`, (err, row) => {
-                        if(err) throw err;
-
-                        db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
-                            if(err) throw err;
+                    
+                    if(new_password.length && confirm_new_password.length && (new_password == confirm_new_password)){ //new pass and confirm pass have values, and are the same
+                        var salt = bcrypt.genSaltSync(10);
+                        var hash = bcrypt.hashSync(new_password,salt);
+                        new_password = hash; 
                         
-                            res.render("users.hbs", {
-                                message:"Successfully update User ID: " +userID,
-                                users: rows
-                            });
-                        }); 
-                    });    
-                }
-                else if(result.length == 1) { //match userID, have user in DB
-
-                    if(result[0].userID == userID){ //same user that is and trying to update data
                         //update user to db
                         db.query(`UPDATE users
-                                SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
-                                WHERE userID = ${userID};`, (err, row) => {
+                        SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", password="${new_password}", role="${role}"
+                        WHERE userID = ${userID};`, (err, row) => {
                             if(err) throw err;
 
                             db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
@@ -755,10 +787,83 @@ exports.postUpdateUser = (req, res) => {
                             
                                 res.render("users.hbs", {
                                     message:"Successfully update User ID: " +userID,
-                                    users: rows
+                                    users: rows,
+                                    userRole: req.session.role,
+                                    notifs : req.session.notifs
                                 });
                             }); 
-                        });
+                        }); 
+
+                    }
+                    else{ // no update password in db
+                        //update user to db
+                        db.query(`UPDATE users
+                        SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
+                        WHERE userID = ${userID};`, (err, row) => {
+                            if(err) throw err;
+
+                            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                if(err) throw err;
+                            
+                                res.render("users.hbs", {
+                                    message:"Successfully update User ID: " +userID,
+                                    users: rows,
+                                    userRole: req.session.role,
+                                    notifs : req.session.notifs
+                                });
+                            }); 
+                        });  
+                    }
+                    
+                      
+                }
+                else if(result.length == 1) { //match userID, have user in DB
+
+                    if(result[0].userID == userID){ //same user that is and trying to update data
+
+                        if(new_password.length && confirm_new_password.length && (new_password == confirm_new_password)){ //new pass and confirm pass have values, and are the same
+                            var salt = bcrypt.genSaltSync(10);
+                            var hash = bcrypt.hashSync(new_password,salt);
+                            new_password = hash; 
+                            
+                            //update user to db
+                            db.query(`UPDATE users
+                            SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", password="${new_password}", role="${role}"
+                            WHERE userID = ${userID};`, (err, row) => {
+                                if(err) throw err;
+    
+                                db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                    if(err) throw err;
+                                
+                                    res.render("users.hbs", {
+                                        message:"Successfully update User ID: " +userID,
+                                        users: rows,
+                                        userRole: req.session.role,
+                                        notifs : req.session.notifs
+                                    });
+                                }); 
+                            }); 
+    
+                        }
+                        else{ // no update password in db
+                            //update user to db
+                            db.query(`UPDATE users
+                            SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", role="${role}"
+                            WHERE userID = ${userID};`, (err, row) => {
+                                if(err) throw err;
+
+                                db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                    if(err) throw err;
+                                
+                                    res.render("users.hbs", {
+                                        message:"Successfully update User ID: " +userID,
+                                        users: rows,
+                                        userRole: req.session.role,
+                                        notifs : req.session.notifs
+                                    });
+                                }); 
+                            }); 
+                        }
                     }
                     else{ //existing user
                         // console.log("UNSUCCESSFULLY UPDATED");
@@ -767,7 +872,9 @@ exports.postUpdateUser = (req, res) => {
                         
                             res.render("users.hbs", {
                                 errors:"Error in registering: username already in use",
-                                users: rows
+                                users: rows,
+                                userRole: req.session.role,
+                                notifs : req.session.notifs
                             });
                         });   
                     }
@@ -801,7 +908,9 @@ exports.postDeleteUser = (req, res) => {
             
                 res.render("users.hbs", {
                     message:"Successfully deleted User ID: " +userID,
-                    users: rows
+                    users: rows,
+                    userRole: req.session.role,
+                    notifs : req.session.notifs
                 });
             }); 
 
