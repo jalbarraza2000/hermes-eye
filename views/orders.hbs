@@ -7,16 +7,13 @@
         <link rel="stylesheet" type="text/css" href="orders.css">
         <link rel="stylesheet" type="text/css" href="style1.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
         <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet" />
         <link href="/css/bootstrap.min.css" rel="stylesheet">
         <script src="/js/jquery.js"></script>
         <script src="/js/bootstrap.min.js"></script>
-        <script src="https://ajax.googleapis.com//ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
         <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-        <script src="https://cdn.datatables.net/datetime/1.1.1/js/dataTables.dateTime.min.js"></script>  
+        <script src="https://cdn.datatables.net/datetime/1.1.1/js/dataTables.dateTime.min.js"></script> 
 
         <title>Orders | Hermes Eye</title>
     </head>
@@ -61,7 +58,6 @@
                 </div>
 
                 <div class="search-body">
-                    <input type="text" id="myInput" onkeyup="tableSearch()" placeholder="Enter Order ID">
                     <table>
                         <thead>
                             <tr>
@@ -140,72 +136,6 @@
             </div>
 
     <script>
- 
-
-        // Sorting Order Data Function
-
-        function sortTableByColumn(table, column, asc = true) {
-            const dirModifier = asc ? 1: -1;
-            const tBody = table.tBodies[0];
-            const rows = Array.from(tBody.querySelectorAll("tr"));
-
-            // Sort each Row
-            const sortedRows = rows.sort((a, b) => {
-                const aColText = a.querySelector(`td:nth-child(${ column + 1})`).textContent.trim();
-                const bColText = b.querySelector(`td:nth-child(${ column + 1})`).textContent.trim();
-
-
-                return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
-            });
-
-            while (tBody.firstChild) {
-                tBody.removeChild(tBody.firstChild);
-            }
-
-            tBody.append(...sortedRows);
-
-            table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-            table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
-            table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
-        }
-
-        document.querySelectorAll(".content-table th").forEach(headerCell => {
-            headerCell.addEventListener("click", () => {
-                const tableElement = headerCell.parentElement.parentElement.parentElement;
-                const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
-                const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-                //const currentIsDescending = headerCell.classList.contains("th-sort-desc");
-
-                sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
-            })
-        });
-
-        // Search Input Filtering
-
-        function tableSearch(){
-            let input, filter, table, tr, td, i, txtValue;
-
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            table = document.getElementById("table-filter");
-            tr = table.getElementsByTagName("tr");
-
-            for (let i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0];
-
-                if(td) {
-                    txtValue = td.textContent || td.innerText;
-
-                    if(txtValue.toUpperCase().indexOf(filter) > -1){
-                        tr[i].style.display = "";
-                    }
-                    else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-
         // Filter Input 
 
         function getUniqueValuesFromColumn() {
@@ -304,45 +234,43 @@
 
         getUniqueValuesFromColumn();
 
-       var minDate, maxDate;
+        var minDate, maxDate;
  
-// Custom filtering function which will search data in column four between two values
-    $.fn.dataTable.ext.search.push(
-    function( settings, data, dataIndex ) {
-        var min = minDate.val();
-        var max = maxDate.val();
-        var date = new Date( data[3] );
- 
-        if (
-            ( min === null && max === null ) ||
-            ( min === null && date <= max ) ||
-            ( min <= date   && max === null ) ||
-            ( min <= date   && date <= max )
-        ) {
-            return true;
-        }
-        return false;
-    }
-);
+        $.fn.dataTable.ext.search.push(
+            function( settings, data, dataIndex ) {
+                var min = minDate.val();
+                var max = maxDate.val();
+                var date = new Date( data[3] );
+        
+                if (
+                    ( min === null && max === null ) ||
+                    ( min === null && date <= max ) ||
+                    ( min <= date   && max === null ) ||
+                    ( min <= date   && date <= max )
+                ) {
+                    return true;
+                }
+                return false;
+            }
+        );
 
- 
-$(document).ready(function() {
-    // Create date inputs
-    minDate = new DateTime($('#min'), {
-        format: 'MMMM Do YYYY'
-    });
-    maxDate = new DateTime($('#max'), {
-        format: 'MMMM Do YYYY'
-    });
- 
-    // DataTables initialisation
-    var table = $('#table-filter').DataTable();
- 
-    // Refilter the table
-    $('#min, #max').on('change', function () {
-        table.fndraw();
-    });
-});
+        $(document).ready(function() {
+            // Create date inputs
+            minDate = new DateTime($('#min'), {
+                format: 'MM/DD/YYYY'
+            });
+            maxDate = new DateTime($('#max'), {
+                format: 'MM/DD/YYYY'
+            });
+        
+            // DataTables initialisation
+            var table = $('#table-filter').DataTable();
+        
+            // Refilter the table
+            $('#min, #max').on('change', function () {
+                table.fndraw();
+            });
+        });
 
         $('.view_order').on('click', function(e) {
             
@@ -357,8 +285,6 @@ $(document).ready(function() {
             window.location.href = $(this).attr("href");
         });
     </script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     </body>
