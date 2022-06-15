@@ -21,6 +21,7 @@
   margin-top: 20px;
   border-radius: 5px;
   overflow-x:auto;
+  margin-bottom: 50px
 }
 
 .table-header{
@@ -80,35 +81,10 @@
   font-weight: 800;
 }
 
-tr:hover {
-  background-color: #f3f3f3;
+.table-row {
   cursor: pointer;
 }
 
-tr:hover td {
-  background-color: transparent; /* or #000 */
-}
-
-.table-header::after {
-  content: "\25b4";
-}
-
-.content-table .th-sort-asc::after {
-  content: "\25b4";
-
-}
-
-.content-table .th-sort-desc::after {
-  content: "\25be";
-  
-}
-
-.content-table .th-sort-asc::after,
-.content-table .th-sort-desc::after {
-  margin-left: 5px;
-}
-
-.content-table .th-sort-asc,
-.content-table .th-sort-desc {
-  background: rgba(0, 0, 0, 0.1);
+.search-body {
+  display: flex;
 }

@@ -58,27 +58,40 @@
                 </div>
 
                 <div class="search-body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th col-index = 5>  
-                                    <select class="table-filter" onchange="filter_rows()">
-                                        <option value="all"></option>
-                                    </select>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Minimum date:</td>
-                                <td><input type="text" id="min" class="datepicker" name="min"></td>
-                            </tr>
-                            <tr>
-                                <td>Maximum date:</td>
-                                <td><input type="text" id="max" class="datepicker" name="max"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="status-filter" style="margin-right: 50px;">
+                        <h5 style="font-family: Nunito; font-weight: 800;">Filter Order Status</h5>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th col-index = 5>  
+                                        <select class="table-filter" onchange="filter_rows()">
+                                            <option value="all"></option>
+                                        </select>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+                    <div class="date-rangeFilter">
+                        <h5 style="font-family: Nunito; font-weight: 800;">Search Date Range</h5>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td style="font-family: Poppins; font-weight: 400;">Minimum date:</td>
+                                    <td><input type="text" id="min" class="datepicker" name="min"></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-family: Poppins; font-weight: 400;">Maximum date:</td>
+                                    <td><input type="text" id="max" class="datepicker" name="max"></td>
+                                </tr>
+                                <tr>
+                                    <td><button class="btn btn-secondary clear-button" style="margin-right: 10px;">Clear</button></td>
+                                    <td><button class="btn btn-primary refresh-button" style="margin-right: 10px;" onClick="window.location.reload();">Search</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="table-div">
@@ -284,6 +297,13 @@
         $('.create-order').on('click', function(e) {    
             window.location.href = $(this).attr("href");
         });
+
+        $('.clear-button').on('click', function(e) {
+            
+            $('input[type=text].datepicker').val("");
+            window.location.reload();
+        });
+
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
