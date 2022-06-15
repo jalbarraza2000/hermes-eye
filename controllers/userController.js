@@ -188,7 +188,7 @@ exports.getLogin = async (req,res)=>{
     let password = req.body.password
     let remember_me = req.body.remember
 
-    db.query(`SELECT firstname, lastname, role, password FROM users WHERE username = '${req.body.username}';`, (err, row) => {
+    db.query(`SELECT userID, firstname, lastname, role, password FROM users WHERE username = '${req.body.username}';`, (err, row) => {
         if(err) throw err;
 
         // console.log(row);
@@ -196,6 +196,7 @@ exports.getLogin = async (req,res)=>{
         if(row.length > 0){
             //FOUND USER
             
+            let userID = row[0].userID;
             let dbFname = row[0].firstname;
             let dbLname = row[0].lastname;
             let dbRole = row[0].role;
@@ -210,7 +211,8 @@ exports.getLogin = async (req,res)=>{
             }
             else{
                 //RIGHT PASSWORD
-
+                
+                req.session.userID = userID
                 req.session.username = username
                 req.session.firstname = dbFname
                 req.session.lastname = dbLname
@@ -518,7 +520,8 @@ exports.getProfile = (req, res)=>{
                 username: req.session.username,
                 firstname: req.session.firstname,
                 lastname: req.session.lastname,
-                role: req.session.role
+                role: req.session.role,
+                userID: req.session.userID
             })
         }
         else if(req.session.isLogistics){
@@ -527,10 +530,16 @@ exports.getProfile = (req, res)=>{
                 username: req.session.username,
                 firstname: req.session.firstname,
                 lastname: req.session.lastname,
+                userID: req.session.userID
             })
         }
         else if(req.session.isAdmin){
-            res.render("profile-admin.hbs")
+            res.render("profile-admin.hbs", {
+                username: req.session.username,
+                firstname: req.session.firstname,
+                lastname: req.session.lastname,
+                userID: req.session.userID
+            })
         }
         else{
             res.render("profile-client.hbs", {
@@ -890,6 +899,369 @@ exports.postUpdateUser = (req, res) => {
     else{
         res.redirect("/") 
     }
+}
+
+
+exports.postUpdateProfile = (req, res) => {
+
+    if(req.session.username){         
+        // reading fields from hbs
+        let userID = req.body.userID
+        let username = req.body.username
+        let first_name = req.body.firstname
+        let last_name = req.body.lastname
+        let new_password = req.body.new_password
+        let confirm_new_password = req.body.confirm_new_password
+
+        //checking if valid
+        body("username").notEmpty();
+        body("first_name").notEmpty();
+        body("last_name").notEmpty();
+        body("new_password").isLength({min:8}); 
+        body("confirm_new_password").isLength({min:8});   
+
+        //check errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+            if(req.session.isOwner || req.session.isSales){
+                res.render("profile.hbs", {
+                    errors:errors,
+                    notifs : req.session.notifs,
+                    username: req.session.username,
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    role: req.session.role,
+                    userID: req.session.userID
+                })
+            }
+            else if(req.session.isLogistics){
+                res.render("profile-logistics.hbs", {
+                    errors:errors,
+                    notifs : req.session.notifs,
+                    username: req.session.username,
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    userID: req.session.userID
+                })
+            }
+            else if(req.session.isAdmin){
+                res.render("profile-admin.hbs", {
+                    errors:errors,
+                    username: req.session.username,
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    userID: req.session.userID
+                })
+            }
+            else{
+                res.render("profile-client.hbs", {
+                    notifs : req.session.notifs
+                })
+            }
+        }
+        else if(new_password != confirm_new_password){ //If not same new pass and confirmation pass
+
+            if(req.session.isOwner || req.session.isSales){
+                res.render("profile.hbs", {
+                    errors:"Error in updating account: incorrect password confirmation",
+                    notifs : req.session.notifs,
+                    username: req.session.username,
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    role: req.session.role,
+                    userID: req.session.userID
+                })
+            }
+            else if(req.session.isLogistics){
+                res.render("profile-logistics.hbs", {
+                    errors:"Error in updating account: incorrect password confirmation",
+                    notifs : req.session.notifs,
+                    username: req.session.username,
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    userID: req.session.userID
+                })
+            }
+            else if(req.session.isAdmin){
+                res.render("profile-admin.hbs", {
+                    errors:"Error in updating account: incorrect password confirmation",
+                    username: req.session.username,
+                    firstname: req.session.firstname,
+                    lastname: req.session.lastname,
+                    userID: req.session.userID
+                })
+            }
+            else{
+                res.render("profile-client.hbs", {
+                    notifs : req.session.notifs
+                })
+            }
+        }
+        else{
+            db.query(`SELECT userID FROM users WHERE username = "${username}";`, function(err, result){
+                if(err) throw err;
+                
+                if(result.length < 1){ //empty result, no match username, can update to a new username                   
+                    
+                    if(new_password.length && confirm_new_password.length && (new_password == confirm_new_password)){ //new pass and confirm pass have values, and are the same
+                        var salt = bcrypt.genSaltSync(10);
+                        var hash = bcrypt.hashSync(new_password,salt);
+                        new_password = hash; 
+                        
+                        //update user to db
+                        db.query(`UPDATE users
+                        SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", password="${new_password}"
+                        WHERE userID = ${userID};`, (err, row) => {
+                            if(err) throw err;
+
+                            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                if(err) throw err;
+
+                                if(req.session.isOwner || req.session.isSales){
+                                    res.render("profile.hbs", {
+                                        message:"Successfully Updated User Profile" ,
+                                        notifs : req.session.notifs,
+                                        username: req.session.username,
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        role: req.session.role,
+                                        userID: req.session.userID
+                                    })
+                                }
+                                else if(req.session.isLogistics){
+                                    res.render("profile-logistics.hbs", {
+                                        message:"Successfully Updated User Profile" ,
+                                        notifs : req.session.notifs,
+                                        username: req.session.username,
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        userID: req.session.userID
+                                    })
+                                }
+                                else if(req.session.isAdmin){
+                                    res.render("profile-admin.hbs", {
+                                        message:"Successfully Updated User Profile",
+                                        username: req.session.username,
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        userID: req.session.userID
+                                    })
+                                }
+                                else{
+                                    res.render("profile-client.hbs", {
+                                        notifs : req.session.notifs
+                                    })
+                                }
+                            }); 
+                        }); 
+
+                    }
+                    else{ // no update password in db
+                        //update user to db
+                        db.query(`UPDATE users
+                        SET username="${username}", firstname = "${first_name}", lastname ="${last_name}"
+                        WHERE userID = ${userID};`, (err, row) => {
+                            if(err) throw err;
+
+                            db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                if(err) throw err;
+
+                                if(req.session.isOwner || req.session.isSales){
+                                    res.render("profile.hbs", {
+                                        message:"Successfully Updated User Profile" ,
+                                        notifs : req.session.notifs,
+                                        username: req.session.username,
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        role: req.session.role,
+                                        userID: req.session.userID
+                                    })
+                                }
+                                else if(req.session.isLogistics){
+                                    res.render("profile-logistics.hbs", {
+                                        message:"Successfully Updated User Profile" ,
+                                        notifs : req.session.notifs,
+                                        username: req.session.username,
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        userID: req.session.userID
+                                    })
+                                }
+                                else if(req.session.isAdmin){
+                                    res.render("profile-admin.hbs", {
+                                        message:"Successfully Updated User Profile",
+                                        username: req.session.username,
+                                        firstname: req.session.firstname,
+                                        lastname: req.session.lastname,
+                                        userID: req.session.userID
+                                    })
+                                }
+                                else{
+                                    res.render("profile-client.hbs", {
+                                        notifs : req.session.notifs
+                                    })
+                                }
+                            }); 
+                        });  
+                    }
+                    
+                      
+                }
+                else if(result.length == 1) { //match userID, have user in DB
+
+                    if(result[0].userID == userID){ //same user that is and trying to update data
+
+                        if(new_password.length && confirm_new_password.length && (new_password == confirm_new_password)){ //new pass and confirm pass have values, and are the same
+                            var salt = bcrypt.genSaltSync(10);
+                            var hash = bcrypt.hashSync(new_password,salt);
+                            new_password = hash; 
+                            
+                            //update user to db
+                            db.query(`UPDATE users
+                            SET username="${username}", firstname = "${first_name}", lastname ="${last_name}", password="${new_password}"
+                            WHERE userID = ${userID};`, (err, row) => {
+                                if(err) throw err;
+    
+                                db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                    if(err) throw err;
+
+                                    if(req.session.isOwner || req.session.isSales){
+                                        res.render("profile.hbs", {
+                                            message:"Successfully Updated User Profile" ,
+                                            notifs : req.session.notifs,
+                                            username: req.session.username,
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            role: req.session.role,
+                                            userID: req.session.userID
+                                        })
+                                    }
+                                    else if(req.session.isLogistics){
+                                        res.render("profile-logistics.hbs", {
+                                            message:"Successfully Updated User Profile" ,
+                                            notifs : req.session.notifs,
+                                            username: req.session.username,
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            userID: req.session.userID
+                                        })
+                                    }
+                                    else if(req.session.isAdmin){
+                                        res.render("profile-admin.hbs", {
+                                            message:"Successfully Updated User Profile",
+                                            username: req.session.username,
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            userID: req.session.userID
+                                        })
+                                    }
+                                    else{
+                                        res.render("profile-client.hbs", {
+                                            notifs : req.session.notifs
+                                        })
+                                    }
+                                }); 
+                            }); 
+    
+                        }
+                        else{ // no update password in db
+                            //update user to db
+                            db.query(`UPDATE users
+                            SET username="${username}", firstname = "${first_name}", lastname ="${last_name}"
+                            WHERE userID = ${userID};`, (err, row) => {
+                                if(err) throw err;
+
+                                db.query("SELECT * FROM users GROUP BY userID ORDER BY userID ASC;", (err, rows) => {
+                                    if(err) throw err;
+
+                                    if(req.session.isOwner || req.session.isSales){
+                                        res.render("profile.hbs", {
+                                            message:"Successfully Updated User Profile" ,
+                                            notifs : req.session.notifs,
+                                            username: req.session.username,
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            role: req.session.role,
+                                            userID: req.session.userID
+                                        })
+                                    }
+                                    else if(req.session.isLogistics){
+                                        res.render("profile-logistics.hbs", {
+                                            message:"Successfully Updated User Profile" ,
+                                            notifs : req.session.notifs,
+                                            username: req.session.username,
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            userID: req.session.userID
+                                        })
+                                    }
+                                    else if(req.session.isAdmin){
+                                        res.render("profile-admin.hbs", {
+                                            message:"Successfully Updated User Profile",
+                                            username: req.session.username,
+                                            firstname: req.session.firstname,
+                                            lastname: req.session.lastname,
+                                            userID: req.session.userID
+                                        })
+                                    }
+                                    else{
+                                        res.render("profile-client.hbs", {
+                                            notifs : req.session.notifs
+                                        })
+                                    }
+                                }); 
+                            }); 
+                        }
+                    }
+                    else{ //existing user
+                        // console.log("UNSUCCESSFULLY UPDATED");   
+
+                        if(req.session.isOwner || req.session.isSales){
+                            res.render("profile.hbs", {
+                                errors:"Error in registering: username already in use",
+                                notifs : req.session.notifs,
+                                username: req.session.username,
+                                firstname: req.session.firstname,
+                                lastname: req.session.lastname,
+                                role: req.session.role,
+                                userID: req.session.userID
+                            })
+                        }
+                        else if(req.session.isLogistics){
+                            res.render("profile-logistics.hbs", {
+                                errors:"Error in registering: username already in use",
+                                notifs : req.session.notifs,
+                                username: req.session.username,
+                                firstname: req.session.firstname,
+                                lastname: req.session.lastname,
+                                userID: req.session.userID
+                            })
+                        }
+                        else if(req.session.isAdmin){
+                            res.render("profile-admin.hbs", {
+                                errors:"Error in registering: username already in use",
+                                username: req.session.username,
+                                firstname: req.session.firstname,
+                                lastname: req.session.lastname,
+                                userID: req.session.userID
+                            })
+                        }
+                        else{
+                            res.render("profile-client.hbs", {
+                                notifs : req.session.notifs
+                            })
+                        }
+                    }
+                }
+                // else{ 
+                                    
+                // }
+            });
+             
+                       
+        }
+    }
+    
 }
 
 

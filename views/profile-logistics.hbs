@@ -41,6 +41,15 @@
       </nav>
       
       <main>
+
+        {{#if errors}}
+            <div class="error">{{errors}}</div>
+        {{/if}}
+
+        {{#if message}}
+            <div class="message">{{message}}</div>
+        {{/if}}
+
         <div class="container-sm">
             <div class="jumbotron jumbotron-fluid" style="margin-top: 50px;">
                 <div class="container">
@@ -54,6 +63,9 @@
                 <div class = "accountInfo">
                     <div class="accountInfo-header">
                         <h1 style="font-family: Nunito; font-weight: 800;">ACCOUNT INFORMATION</h1>
+
+                        <button type="button" class="btn btn-primary view_modal" value="{{this.userID}}" data-bs-toggle="modal" data-bs-target="#view_modal" style="font-family: Nunito; font-weight: 800;">Edit</button>
+
                     </div>
 
                     <div class="accountInfo-body"> 
@@ -64,6 +76,51 @@
                 </div>
             </div>
       </main>
+
+      <div class="modal fade" id="view_modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-title">Edit profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form method="post" action="updateProfile">
+                        <div class="form-group">
+                            <input type ="hidden" name="userID" value={{userID}}>
+                            <label for="inputUsername">Username:</label>
+                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder={{this.username}} value={{this.username}} required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputFname">First name:</label>
+                            <input type="text" class="form-control" id="inputFname" name="firstname" placeholder={{this.firstname}} value={{this.firstname}} required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputLname">Last name:</label>
+                            <input type="text" class="form-control" id="inputLname" name="lastname" placeholder={{this.lastname}} value={{this.lastname}} required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputPassword">New Password:</label>
+                            <input type="password" class="form-control" id="inputPassword" name="new_password" placeholder="New Password" minlength="8">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inputConfirmPassword">Confirm New Password:</label>
+                            <input type="password" class="form-control" id="inputConfirmPassword" name="confirm_new_password" placeholder="Confirm New Password" minlength="8">
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary" style="margin-top: 10px">Submit</button>
+                    </form>
+
+                </div>
+                </div>
+            </div>
+        </div>
       
       <!-- partial -->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
