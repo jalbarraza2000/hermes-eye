@@ -1,0 +1,89 @@
+#title_header {
+    color: #1b3c65;
+    text-transform: uppercase;
+    padding: 10px;
+  }
+
+  .container-sm{
+    margin-bottom: 10px;
+  }
+  
+  .vehicle_header {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+  }
+
+  .add_button{
+    align-items: right;
+  }
+  
+  .page_information_orders {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .table-div {
+    border: 2px solid grey;
+    border-radius: 5px;
+    overflow-x: auto;
+  }
+  
+  .table-header {
+    border-bottom: 2px solid grey;
+    padding: 10px;
+  }
+  
+  .table-body {
+    padding: 10px;
+  }
+
+  tbody tr:nth-child(even){
+  background-color: #F5F5F5;
+}
+  
+  .form-header {
+    display: flex;
+    flex-direction: row;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    justify-content: space-between;
+  }
+  
+  .form-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .error {
+    height: auto;
+    font-size: 25px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    background: #ffb4b4;
+    border-radius: 5px;
+    border-left: 5px solid #ff0000;
+    border-right: 5px solid #ff0000;
+  
+    padding: 10px;
+  }
+  
+  .message {
+    height: auto;
+    font-size: 25px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+    background: #c6e9d7;
+    border-radius: 5px;
+    border-left: 5px solid #00c2cb;
+    border-right: 5px solid #00c2cb;
+  
+    padding: 10px;
+  }
+  

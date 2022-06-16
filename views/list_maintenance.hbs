@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style1.css">
+    <link rel="stylesheet" type="text/css" href="list_maintenance.css">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/jquery.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+
+    <title>List Maintenance | Hermes Eye</title>
+</head>
+<body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" style="background-color: #1b3c65 !important;">
+          <a class="navbar-brand" href="/"><img class="navbar-logo" src="img/HermesEye icon.png"></img></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation" style="margin-right: 30px;">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            
+            <div class="navbar-nav me-auto">
+                <a class="nav-item nav-link" href="home" method="get">Home</a>
+                <a class="nav-item nav-link" href="registration">Registration</a>
+                <a class="nav-item nav-link" href="users">Users</a>
+                <a class="nav-item nav-link active" href="list_maintenance">List Maintenance</a>
+                <a class="nav-item nav-link" href="profile">Profile</a>
+            </div>
+              
+            <div class="navbar-nav" style="margin-right: 30px;">
+                <a href="signout" id="signout" method="get" style="margin-left: 0px; color: white;">Sign out</a>
+            </div>
+          </div>
+      </nav>
+      
+      <main>
+        <div id="title_header"><h1>Dropdown List Maintenance</h1></div>
+        
+        {{#if errors}}
+            <div class="error">{{errors}}</div>
+        {{/if}}
+
+        {{#if message}}
+            <div class="message">{{message}}</div>
+        {{/if}}
+
+{{!-- PLATE NUMBERS --}}
+        <div class="container-sm">
+          <div class="vehicle_header">
+              <div class="page_information_users">
+                  <h2 style="font-family: Nunito; font-weight: 800;">Plate Number</h2>
+                  <h5 style="font-family: Poppins; font-weight: 400;">View available plate numbers and shipment methods for TW and Company, Inc.</h4>
+
+                  <div class="align-self-end ml-auto add_button">
+                        <button type="button" class="btn btn-primary view_modal" value="{{this.driverID}}" data-bs-toggle="modal" data-bs-target="#add_modal" style="font-family: Nunito; font-weight: 800;">+ Add Vehicle Information</button>
+                  </div>
+              </div>
+          </div>
+
+            <div class="table-div">
+              <table style="font-family: Nunito; text-align: center; width: 100%;">
+                <tbody>
+                    <tr>
+                        <th class="table-header">Plate Number</th>
+                        <th class="table-header">Vehicle/Shipment Method</th>
+                        <th class="table-header"></th>
+                    </tr>
+
+                    {{#each plateNums}}
+                        <tr>
+                            <td class="table-body" id="driverID{{driverID}}" value="{{driverID}}">{{plateNum}}</td>
+                            <td class="table-body" id="shippedVia{{driverID}}">{{shippedVia}}</td>
+                            
+                            <td class="table-body"><button type="button" class="btn btn-danger view_modal" value="{{this.driverID}}" data-bs-toggle="modal" data-bs-target="#delete_modal{{this.driverID}}" style="font-family: Nunito; font-weight: 800;">Delete</button></td>
+                        </tr>
+
+                    {{/each}}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+{{!-- SHIPPED VIA --}}
+          <div class="container-sm">
+          <div class="vehicle_header">
+              <div class="page_information_users">
+                  <h2 style="font-family: Nunito; font-weight: 800;">Shipping Methods</h2>
+                  <h5 style="font-family: Poppins; font-weight: 400;">View available shipping methods for TW and Company, Inc.</h4>
+
+                  <div class="align-self-end ml-auto add_button">
+                        <button type="button" class="btn btn-primary view_modal" value="{{this.shippedViaID}}" data-bs-toggle="modal" data-bs-target="#add_modal_shipping" style="font-family: Nunito; font-weight: 800;">+ Add Shipping Method</button>
+                  </div>
+              </div>
+          </div>
+
+            <div class="table-div">
+              <table style="font-family: Nunito; text-align: center; width: 100%;">
+                <tbody>
+                    <tr>
+                        <th class="table-header">Vehicle/Shipment Method</th>
+                        <th class="table-header"></th>
+                    </tr>
+
+                    {{#each shipmentOptions}}
+                        <tr>
+                            <td class="table-body" id="shipmentMethod{{shippedViaID}}" value="{{shippedVia}}">{{shippedVia}}</td>
+                            
+                            <td class="table-body"><button type="button" class="btn btn-danger view_modal" value="{{this.shippedViaID}}" data-bs-toggle="modal" data-bs-target="#delete_modal_shipping{{this.shippedViaID}}" style="font-family: Nunito; font-weight: 800;">Delete</button></td>
+                        </tr>
+
+                    {{/each}}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+{{!-- BUSINESS STYLE --}}
+          <div class="container-sm">
+          <div class="vehicle_header">
+              <div class="page_information_users">
+                  <h2 style="font-family: Nunito; font-weight: 800;">Business Style</h2>
+                  <h5 style="font-family: Poppins; font-weight: 400;">View available business style options for TW and Company, Inc.</h4>
+
+                  <div class="align-self-end ml-auto add_button">
+                        <button type="button" class="btn btn-primary view_modal" value="{{this.businessStyleID}}" data-bs-toggle="modal" data-bs-target="#add_modal_business" style="font-family: Nunito; font-weight: 800;">+ Add Business Style Option</button>
+                  </div>
+              </div>
+          </div>
+
+            <div class="table-div">
+              <table style="font-family: Nunito; text-align: center; width: 100%;">
+                <tbody>
+                    <tr>
+                        <th class="table-header">Business Style Option</th>
+                        <th class="table-header"></th>
+                    </tr>
+
+                    {{#each businessStyles}}
+                        <tr>
+                            <td class="table-body" id="businessStyle{{businessStyleID}}" value="{{businessStyle}}">{{businessStyle}}</td>
+                            
+                            <td class="table-body"><button type="button" class="btn btn-danger view_modal" value="{{this.businessStyleID}}" data-bs-toggle="modal" data-bs-target="#delete_modal_business{{this.businessStyleID}}" style="font-family: Nunito; font-weight: 800;">Delete</button></td>
+                        </tr>
+
+                    {{/each}}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+      </main>
+    
+{{!-- MODALS  --}}
+
+      {{!-- ADD NEW PLATE NUMBER MODAL --}}
+      <div class="modal fade" id="add_modal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Add new Plate Number</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="addPlateNum"> 
+                    <div class="form-group">
+                        <label for="inputPlateNum">Plate Number (Format: AAA-9999)</label>
+                        <input type="text" pattern="^([A-Z]{3,4})-([0-9]{3,4})$" class="form-control form-inline" id="inputPlateNum" name="plateNum" placeholder="AAA-9999" required>
+                    </div>
+
+                    <div class = "form-group col-md-4">
+                        <label for="inputShippedVia">Vehicle Type  :</label>
+                        <select id="inputShippedVia" name="shippedVia" class="form-control">
+                            {{#each shipmentOptions}}
+                                <option value="{{shippedVia}}" selected>{{shippedVia}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add Plate Number</button>
+                </form>
+
+            </div>
+            </div>
+        </div>
+       </div>
+      
+      {{!-- DELETE PLATE NUMBER MODAL --}}
+      {{#each plateNums}}
+        <div class="modal fade" id="delete_modal{{this.driverID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title w-100" id="modal-title">Delete plate number</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="deletePlateNum">
+                    <div class="form-group">
+                        <input type ="hidden" name="driverID" value={{this.driverID}}>
+                        <input type ="hidden" name="plateNum" value={{this.plateNum}}>
+                    </div>
+
+                    <h4 class="text-center w-100">Are you sure you want to delete <br> plate number: {{this.plateNum}}?</h4>
+                    <button type="submit" class="btn btn-danger  btn-lg btn-block w-100" style="font-family: Nunito; font-weight: 800 margin-top: 10px">Yes</button>
+                </form> 
+            </div>
+            </div>
+        </div>
+        </div>
+      {{/each}}
+
+      {{!-- ADD NEW SHIPPING METHOD MODAL --}} 
+      <div class="modal fade" id="add_modal_shipping" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Add new Shipping Method</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="addShippedVia"> 
+                    <div class="form-group">
+                        <label for="inputShipVia">Shipping Via: </label>
+                        <input type="text" class="form-control form-inline" id="inputShipVia" name="addShippedVia" placeholder="Shipped Via" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add Shipping Method</button>
+                </form>
+
+            </div>
+            </div>
+        </div>
+       </div>
+
+       {{!-- DELETE SHIPPING METHOD MODAL --}}
+      {{#each shipmentOptions}}
+        <div class="modal fade" id="delete_modal_shipping{{this.shippedViaID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title w-100" id="modal-title">Delete shipping method</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="deleteShippedVia">
+                    <div class="form-group">
+                        <input type ="hidden" name="shippedViaID" value={{this.shippedViaID}}>
+                        <input type ="hidden" name="deleteShippedVia" value={{this.shippedVia}}>
+                    </div>
+
+                    <h4 class="text-center w-100">Are you sure you want to delete <br> shipping method: {{this.shippedVia}}?</h4>
+                    <button type="submit" class="btn btn-danger  btn-lg btn-block w-100" style="font-family: Nunito; font-weight: 800 margin-top: 10px">Yes</button>
+                </form> 
+            </div>
+            </div>
+        </div>
+        </div>
+      {{/each}}
+
+      {{!-- ADD NEW BUSINESS STYLE MODAL --}} 
+      <div class="modal fade" id="add_modal_business" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Add new Business Style</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="addBusinessStyle"> 
+                    <div class="form-group">
+                        <label for="inputBusinessStyle">Business Style: </label>
+                        <input type="text" class="form-control form-inline" id="inputBusinessStyle" name="addBusinessStyle" placeholder="Business Style" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 10px">Add Business Style</button>
+                </form>
+
+            </div>
+            </div>
+        </div>
+       </div>
+
+       {{!-- DELETE BUSINESS STYLE MODAL --}}
+      {{#each businessStyles}}
+        <div class="modal fade" id="delete_modal_business{{this.businessStyleID}}" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title w-100" id="modal-title">Delete business style</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form method="post" action="deleteBusinessStyle">
+                    <div class="form-group">
+                        <input type ="hidden" name="businessStyleID" value={{this.businessStyleID}}>
+                        <input type ="hidden" name="deleteBusinessStyle" value={{this.businessStyle}}>
+                    </div>
+
+                    <h4 class="text-center w-100">Are you sure you want to delete <br> business style: {{this.businessStyle}}?</h4>
+                    <button type="submit" class="btn btn-danger  btn-lg btn-block w-100" style="font-family: Nunito; font-weight: 800 margin-top: 10px">Yes</button>
+                </form> 
+            </div>
+            </div>
+        </div>
+        </div>
+      {{/each}}
+
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+      <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'></script><script  src="./home.js"></script> -->
+</body>
+</html>

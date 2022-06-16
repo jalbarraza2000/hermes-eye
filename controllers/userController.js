@@ -510,6 +510,448 @@ exports.getUsers = (req, res)=>{
     }
 }
 
+exports.getListMaintenance = (req, res)=>{
+
+    if(req.session.username){   ////HEREEEE
+        db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+            if(err) throw err;
+            db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                if(err) throw err;
+                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                    if(err) throw err;
+
+                    res.render("list_maintenance.hbs", {
+                        plateNums: rows,
+                        shipmentOptions: shipmentOptions,
+                        businessStyles: businessStyles
+                    });
+                })   
+            })
+        
+         }); 
+    }
+    else{
+        res.redirect("/") 
+    }
+
+
+}
+
+exports.postAddPlateNumber = (req, res) => {
+
+    if(req.session.username){         
+        // reading fields from hbs
+        let plateNum = req.body.plateNum
+        let shippedVia = req.body.shippedVia
+
+        //checking if valid
+        body("plateNum").notEmpty();
+
+        //check errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+
+            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                if(err) throw err;
+                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                    if(err) throw err;
+                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                    if(err) throw err;
+
+                    res.render("list_maintenance.hbs", {
+                        errors:errors,
+                        plateNums: rows,
+                        shipmentOptions: shipmentOptions,
+                        businessStyles: businessStyles
+                    });
+                })
+                })
+            
+             });
+
+        }
+        else{
+            //save plate number to db
+            db.query(`SELECT MAX(driverID)+1 AS newID FROM trucks;`, (err, row) => {
+                if(err) throw err;
+        
+                let newID = row[0].newID;
+        
+                db.query(`SELECT plateNum FROM trucks WHERE plateNum = "${plateNum}";`, function(err, result){
+                    if(err) throw err;
+                    
+                    if(result.length < 1){ //empty result, no match plate number
+                    //new plate number logic
+                    db.query(`INSERT INTO hermes_eye.trucks (driverID, plateNum, shippedVia)
+                                        VALUES (${newID}, "${plateNum}", "${shippedVia}");`, (err, row) => {
+                            if(err) throw err;
+            
+                            console.log("SUCCESSFULLY REGISTERED PLATE NUMBER UID: " +newID);
+                            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                                if(err) throw err;
+                                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                                    if(err) throw err;
+                                    db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                                        if(err) throw err;
+                    
+                                        res.render("list_maintenance.hbs", {
+                                            message:"Successfully added plate number: " +plateNum,
+                                            plateNums: rows,
+                                            shipmentOptions: shipmentOptions,
+                                            businessStyles: businessStyles
+                                        });
+                                    })
+                                })
+                            
+                             });
+
+                        });;
+                    }
+                    else{ 
+                        //existing plate number 
+                        console.log("UNSUCCESSFULLY REGISTERED PLATE NUMBER");
+
+                        db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                            if(err) throw err;
+                            db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                                if(err) throw err;
+                                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                                    if(err) throw err;
+                
+                                    res.render("list_maintenance.hbs", {
+                                        errors:"Error in registering: plate number already available",
+                                        plateNums: rows,
+                                        shipmentOptions: shipmentOptions,
+                                        businessStyles: businessStyles
+                                    });
+                                })
+                            })
+                        
+                         });                  
+                    }
+                });
+        
+            });           
+        }
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
+exports.postDeletePlateNumber = (req, res) => {
+
+    if(req.session.username){ 
+        // reading fields from hbs
+        let driverID = req.body.driverID
+        let plateNum = req.body.plateNum
+        
+        db.query(`DELETE FROM trucks WHERE driverID = ${driverID};`, (err, rows) => {
+            if(err) throw err;
+
+            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                if(err) throw err;
+                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                    if(err) throw err;
+                    db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                        if(err) throw err;
+    
+                        res.render("list_maintenance.hbs", {
+                            message: "Successfully deleted plate number: " +plateNum,
+                            plateNums: rows,
+                            shipmentOptions: shipmentOptions,
+                            businessStyles: businessStyles
+                        });
+                    })
+
+                })
+            });
+
+            
+         });
+        
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
+exports.postAddShippedVia = (req, res) => {
+
+    if(req.session.username){         
+        // reading fields from hbs
+        let shippedVia = req.body.addShippedVia
+
+        //checking if valid
+        body("shippedVia").notEmpty();
+
+        //check errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+
+            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                if(err) throw err;
+                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                    if(err) throw err;
+                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                    if(err) throw err;
+        
+                    res.render("list_maintenance.hbs", {
+                        errors:errors,
+                        plateNums: rows,
+                        shipmentOptions: shipmentOptions,
+                        businessStyles: businessStyles
+                    });
+                })
+                })
+            
+             });
+
+        }
+        else{
+            //save shipping method to db
+            db.query(`SELECT MAX(id)+1 AS newID FROM shipmentVia;`, (err, row) => {
+                if(err) throw err;
+        
+                let newID = row[0].newID;
+        
+                db.query(`SELECT shippedVia FROM shipmentVia WHERE shippedVia = "${shippedVia}";`, function(err, result){
+                    if(err) throw err;
+                    
+                    if(result.length < 1){ //empty result, no match shipping method
+                    //new shipping method logic
+                    db.query(`INSERT INTO hermes_eye.shipmentVia (id, shippedVia)
+                                        VALUES (${newID}, "${shippedVia}");`, (err, row) => {
+                            if(err) throw err;
+            
+                            console.log("SUCCESSFULLY REGISTERED SHIPMENT METHOD UID: " +newID);
+                            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                                if(err) throw err;
+                                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                                    if(err) throw err;
+                                    db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                                        if(err) throw err;
+                    
+                                        res.render("list_maintenance.hbs", {
+                                            message:"Successfully added shipping method: " +shippedVia,
+                                            plateNums: rows,
+                                            shipmentOptions: shipmentOptions,
+                                            businessStyles: businessStyles
+                                        });
+                                    })
+                                })
+                            
+                             });
+
+                        });;
+                    }
+                    else{ 
+                        //existing shipping method 
+                        console.log("UNSUCCESSFULLY REGISTERED SHIPPING METHOD");
+
+                        db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                            if(err) throw err;
+                            db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                                if(err) throw err;
+                                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                                    if(err) throw err;
+                
+                                    res.render("list_maintenance.hbs", {
+                                        errors:"Error in registering: shipping method already available",
+                                        plateNums: rows,
+                                        shipmentOptions: shipmentOptions,
+                                        businessStyles: businessStyles
+                                    });
+                                })
+                            })
+                        
+                         });                  
+                    }
+                });
+        
+            });           
+        }
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
+exports.postDeleteShippedVia = (req, res) => {
+
+    if(req.session.username){ 
+        // reading fields from hbs
+        let shippedViaID = req.body.shippedViaID
+        let deleteShippedVia = req.body.deleteShippedVia
+        
+        db.query(`DELETE FROM shipmentVia WHERE id = ${shippedViaID};`, (err, rows) => {
+            if(err) throw err;
+
+            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                if(err) throw err;
+                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                    if(err) throw err;
+                    db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                        if(err) throw err;
+    
+                        res.render("list_maintenance.hbs", {
+                            message: "Successfully deleted shipping method: " +deleteShippedVia,
+                            plateNums: rows,
+                            shipmentOptions: shipmentOptions,
+                            businessStyles: businessStyles
+                        });
+                    })
+
+                })
+            });
+
+            
+         });
+        
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
+exports.postAddBusinessStyle = (req, res) => {
+
+    if(req.session.username){         
+        // reading fields from hbs
+        let businessStyle = req.body.addBusinessStyle
+
+        //checking if valid
+        body("businessStyle").notEmpty();
+
+        //check errors
+        const errors = validationResult(req);
+        if(!errors.isEmpty()){
+
+            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                if(err) throw err;
+                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                    if(err) throw err;
+                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                    if(err) throw err;
+        
+                    res.render("list_maintenance.hbs", {
+                        errors:errors,
+                        plateNums: rows,
+                        shipmentOptions: shipmentOptions,
+                        businessStyles: businessStyles
+                    });
+                })
+                })
+            
+             });
+
+        }
+        else{
+            //save business style to db
+            db.query(`SELECT MAX(id)+1 AS newID FROM businessStyle;`, (err, row) => {
+                if(err) throw err;
+        
+                let newID = row[0].newID;
+        
+                db.query(`SELECT businessStyle FROM businessStyle WHERE businessStyle = "${businessStyle}";`, function(err, result){
+                    if(err) throw err;
+                    
+                    if(result.length < 1){ //empty result, no match business style
+                    //new business style logic
+                    db.query(`INSERT INTO hermes_eye.businessStyle (id, businessStyle)
+                                        VALUES (${newID}, "${businessStyle}");`, (err, row) => {
+                            if(err) throw err;
+            
+                            console.log("SUCCESSFULLY REGISTERED BUSINESS STYLE UID: " +newID);
+                            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                                if(err) throw err;
+                                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                                    if(err) throw err;
+                                    db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                                        if(err) throw err;
+                    
+                                        res.render("list_maintenance.hbs", {
+                                            message:"Successfully added business style: " +businessStyle,
+                                            plateNums: rows,
+                                            shipmentOptions: shipmentOptions,
+                                            businessStyles: businessStyles
+                                        });
+                                    })
+                                })
+                            
+                             });
+
+                        });;
+                    }
+                    else{ 
+                        //existing business style
+                        console.log("UNSUCCESSFULLY REGISTERED BUSINESS STYLE");
+
+                        db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                            if(err) throw err;
+                            db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                                if(err) throw err;
+                                db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                                    if(err) throw err;
+                
+                                    res.render("list_maintenance.hbs", {
+                                        errors:"Error in registering: business style option already available",
+                                        plateNums: rows,
+                                        shipmentOptions: shipmentOptions,
+                                        businessStyles: businessStyles
+                                    });
+                                })
+                            })
+                        
+                         });                  
+                    }
+                });
+        
+            });           
+        }
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
+exports.postDeleteBusinessStyle = (req, res) => {
+
+    if(req.session.username){ 
+        // reading fields from hbs
+        let businessStyleID = req.body.businessStyleID
+        let deleteBusinessStyle = req.body.deleteBusinessStyle
+        
+        db.query(`DELETE FROM businessStyle WHERE id = ${businessStyleID};`, (err, rows) => {
+            if(err) throw err;
+
+            db.query("SELECT driverID, plateNum, shippedVia FROM trucks GROUP BY driverID ORDER BY driverID ASC;", (err, rows) => {
+                if(err) throw err;
+                db.query("SELECT id AS shippedViaID, shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                    if(err) throw err;
+                    db.query("SELECT id AS businessStyleID, businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                        if(err) throw err;
+    
+                        res.render("list_maintenance.hbs", {
+                            message: "Successfully deleted business style: " +deleteBusinessStyle,
+                            plateNums: rows,
+                            shipmentOptions: shipmentOptions,
+                            businessStyles: businessStyles
+                        });
+                    })
+
+                })
+            });
+
+            
+         });
+        
+    }
+    else{
+        res.redirect("/") 
+    }
+}
+
 exports.getProfile = (req, res)=>{
 
     if(req.session.username){   
@@ -592,8 +1034,20 @@ exports.getCreateOrder = (req, res) => {
         if(err) throw err;
         db.query("SELECT o.orderID FROM orders o;", (err, orders) => {
             if(err) throw err;
+            db.query("SELECT shippedVia FROM hermes_eye.shipmentVia;", (err, shipmentOptions) => {
+                if(err) throw err;
+                db.query("SELECT businessStyle FROM hermes_eye.businessStyle;", (err, businessStyles) => {
+                    if(err) throw err;
+        
+                    res.render('create_order', {
+                        rows: JSON.stringify(rows), 
+                        orders: JSON.stringify(orders),
+                        shipmentOptions: shipmentOptions,
+                        businessStyles: businessStyles});
+                })
+            })
 
-            res.render('create_order', {rows: JSON.stringify(rows), orders: JSON.stringify(orders)});
+            // res.render('create_order', {rows: JSON.stringify(rows), orders: JSON.stringify(orders)});
         })
         
      });
