@@ -58,22 +58,8 @@
                 </div>
 
                 <div class="search-body">
-                    <div class="status-filter" style="margin-right: 50px;">
-                        <h5 style="font-family: Nunito; font-weight: 800;">Filter Order Status</h5>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th col-index = 5>  
-                                        <select class="table-filter" onchange="filter_rows()">
-                                            <option value="all"></option>
-                                        </select>
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
 
-                    <div class="date-rangeFilter">
+                    <div class="date-rangeFilter" style="margin-right: 50px;">
                         <h5 style="font-family: Nunito; font-weight: 800;">Search Date Range</h5>
                         <table>
                             <tbody>
@@ -92,6 +78,23 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="status-filter" >
+                        <h5 style="font-family: Nunito; font-weight: 800;">Filter Order Status</h5>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th col-index = 5>  
+                                        <select class="table-filter" onchange="filter_rows()">
+                                            <option value="all"></option>
+                                        </select>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+
+
                 </div>
 
                 <div class="table-div">
